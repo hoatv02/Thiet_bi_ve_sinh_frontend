@@ -1,0 +1,206 @@
+<div class="bg-white p-6 rounded-xl shadow-sm border">
+
+  <!-- Accordion Header -->
+  <div class="flex justify-between items-center cursor-pointer select-none mb-4" (click)="toggleSearchPanel()">
+    <h1 class="text-xl font-bold text-gray-700">Thông tin tìm kiếm</h1>
+    <lucide-icon [name]="isSearchOpen ? 'chevron-up' : 'chevron-down'"
+      class="w-5 h-5 text-gray-500 transition-transform duration-300"></lucide-icon>
+  </div>
+
+  <!-- Accordion Body -->
+  <div class="transition-all duration-500 ease-in-out overflow-hidden" [style.maxHeight]="isSearchOpen ? '800px' : '0'">
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+
+      <!-- Search text -->
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Tìm kiếm</label>
+        <input type="text" [(ngModel)]="keyword" placeholder="Tên khách hoặc mã đơn..."
+          class="w-full border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-orange-400" />
+      </div>
+
+      <!-- Trạng thái đơn -->
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Trạng thái</label>
+        <select [(ngModel)]="statusFilter" class="w-full border rounded-md px-3 py-2 text-sm bg-white">
+          <option value="">Tất cả</option>
+          <option value="pending">Chờ xử lý</option>
+          <option value="confirmed">Đã xác nhận</option>
+          <option value="shipping">Đang giao</option>
+          <option value="completed">Hoàn thành</option>
+          <option value="cancelled">Đã hủy</option>
+        </select>
+      </div>
+
+      <!-- Từ ngày -->
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Từ ngày</label>
+        <input type="date" [(ngModel)]="dateFrom" class="w-full border rounded-md px-3 py-2 text-sm" />
+      </div>
+
+      <!-- Đến ngày -->
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Đến ngày</label>
+        <input type="date" [(ngModel)]="dateTo" class="w-full border rounded-md px-3 py-2 text-sm" />
+      </div>
+    </div>
+
+    <!-- Search Button -->
+    <div class="flex justify-end mb-4">
+      <button (click)="searchOrders()"
+        class="flex items-center bg-[#3AA7E9] hover:bg-[#00456F] text-white px-4 py-2 rounded-md text-sm space-x-2">
+        <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
+        <span>Tìm kiếm</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="overflow-x-auto rounded-lg border shadow-sm">
+    <table class="w-full text-sm border-collapse">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="p-3 border text-center w-[5%]">#</th>
+          <th class="p-3 border text-left">Mã đơn</th>
+          <th class="p-3 border text-left">Khách hàng</th>
+          <th class="p-3 border text-left">Email</th>
+          <th class="p-3 border text-center">SĐT</th>
+          <th class="p-3 border text-center">Tổng tiền</th>
+          <th class="p-3 border text-center">Trạng thái</th>
+          <th class="p-3 border text-center w-[15%]">Thao tác</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let o of orders; let i = index" class="hover:bg-gray-50">
+
+          <td class="p-3 border text-center">{{ (pageNumber - 1) * pageSize + (i + 1) }}</td>
+          <td class="p-3 border">{{ o.orderCode }}</td>
+          <td class="p-3 border">{{ o.customerName }}</td>
+          <td class="p-3 border">{{ o.customerEmail }}</td>
+          <td class="p-3 border text-center">{{ o.customerPhone }}</td>
+          <td class="p-3 border text-center text-blue-600 font-semibold">
+            {{ o.totalAmount | number:'1.0-0':'vi' }}đ
+          </td>
+
+          <!-- TRẠNG THÁI -->
+          <td class="p-3 border text-center">
+            <!-- Badge, click để mở dropdown -->
+            <div *ngIf="!o.showStatusDropdown" class="inline-block cursor-pointer" (click)="toggleStatusDropdown(o)">
+              <span class="px-3 py-1 rounded-full text-xs" [ngClass]="getStatusClass(o.orderStatus)">
+                {{ getStatusName(o.orderStatus) }}
+              </span>
+            </div>
+
+            <!-- Dropdown chọn trạng thái -->
+            <div *ngIf="o.showStatusDropdown">
+              <select [(ngModel)]="o.tempStatus" (change)="onStatusChange(o)"
+                class="border rounded-full px-3 py-1 text-xs bg-white" [ngClass]="getStatusClass(o.tempStatus)">
+                <option value="pending">Chờ xử lý</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="shipping">Đang giao</option>
+                <option value="completed">Hoàn thành</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+          </td>
+
+          <!-- THAO TÁC -->
+          <td class="p-3 border text-center w-[15%]">
+            <div class="flex justify-center gap-3">
+              <!-- Detail -->
+              <lucide-icon name="eye" class="w-5 h-5 text-gray-500 hover:text-[#3AA7E9] cursor-pointer"
+                (click)="openDetail(o.orderId)">
+              </lucide-icon>
+
+              <!-- Nút xác nhận chỉ hiện khi tempStatus khác orderStatus -->
+              <lucide-icon *ngIf="o.tempStatus && o.tempStatus !== o.orderStatus" name="check-circle"
+                class="w-5 h-5 text-green-600 hover:text-green-700 cursor-pointer" (click)="confirmStatus(o)">
+              </lucide-icon>
+            </div>
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+  <div class="flex justify-end items-center mt-4 text-sm text-gray-500">
+    <app-pagination class="ml-4" [pageNumber]="pageNumber" [pageSize]="pageSize" [totalItem]="totalItems"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  </div>
+
+</div>
+<!-- POPUP CHI TIẾT ĐƠN -->
+<ng-template #orderDetailTpl>
+  <div *ngIf="selectedOrder" class="text-sm space-y-3">
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <span class="font-semibold">Mã đơn:</span>
+        <span class="ml-1">{{ selectedOrder.orderCode }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Khách hàng:</span>
+        <span class="ml-1">{{ selectedOrder.customerName }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Email:</span>
+        <span class="ml-1">{{ selectedOrder.customerEmail }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">SĐT:</span>
+        <span class="ml-1">{{ selectedOrder.customerPhone }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Tổng tiền:</span>
+        <span class="ml-1 text-blue-600 font-semibold">
+          {{ selectedOrder.totalAmount | number:'1.0-0':'vi' }}đ
+        </span>
+      </div>
+
+      <div>
+        <span class="font-semibold">Trạng thái:</span>
+        <span class="ml-1 px-2 py-0.5 rounded-full text-xs" [ngClass]="getStatusClass(selectedOrder.orderStatus)">
+          {{ getStatusName(selectedOrder.orderStatus) }}
+        </span>
+      </div>
+      <div>
+        <span class="font-semibold">Ngày tạo:</span>
+        <span class="ml-1">{{ selectedOrder.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Ghi chú:</span>
+        <span class="ml-1">{{ selectedOrder.note }}</span>
+      </div>
+    </div>
+
+    <!-- Nếu có danh sách sản phẩm -->
+    <div class="mt-4" *ngIf="selectedOrder.items?.length">
+      <h3 class="font-semibold mb-2">Sản phẩm</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="border p-2 text-left">Tên SP</th>
+            <th class="border p-2 text-center">SL</th>
+            <th class="border p-2 text-right">Đơn giá</th>
+            <th class="border p-2 text-right">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let it of selectedOrder.items">
+            <td class="border p-2">{{ it.productName }}</td>
+            <td class="border p-2 text-center">{{ it.quantity }}</td>
+            <td class="border p-2 text-right">{{ it.price | number:'1.0-0':'vi' }}đ</td>
+            <td class="border p-2 text-right">
+              {{ (it.quantity * it.salePrice) | number:'1.0-0':'vi' }}đ
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</ng-template>

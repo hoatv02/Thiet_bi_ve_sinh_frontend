@@ -1,0 +1,40 @@
+<div class="wrapper-login">
+  <div class="shape one"></div>
+  <div class="shape two"></div>
+  <div class="shape three"></div>
+  <div class="login-container mb-2">
+    <p class="font-medium text-[16px] leading-[150%] text-[#636364] mb-8">Vui lòng điền thông tin chi tiết của bạn để
+      đăng ký tham gia mua sắm</p>
+    <div class="form-input">
+      <label class="block text-sm text-gray-600 mb-1">Email</label>
+      <input type="email" [(ngModel)]="form.email" class="border rounded-xl w-full p-3 mb-3 placeholder-[#636364]"
+        placeholder="name@company.com" />
+    </div>
+    <div class="form-input">
+      <label class="block text-sm text-gray-600 mb-1">Họ và tên</label>
+      <input type="text" [(ngModel)]="form.fullName" class="border rounded-xl w-full p-3 mb-3 placeholder-[#636364]"
+        placeholder="Nhập họ và tên" />
+    </div>
+    <div class="form-input">
+      <label class="block text-sm text-gray-600 mb-1">Số điện thoại</label>
+      <input type="text" [(ngModel)]="form.phone" class="border rounded-xl w-full p-3 mb-3 placeholder-[#636364]"
+        placeholder="Nhập số điện thoại" />
+    </div>
+    <div class="form-input">
+      <label class="block text-sm text-gray-600 mb-1">Ngày sinh</label>
+      <input type="date" [(ngModel)]="form.dob" class="border rounded-xl w-full p-3 mb-3 placeholder-[#636364]" />
+    </div>
+    <div class="form-input">
+      <label class="block text-sm text-gray-600 mb-1">Nhập mật khẩu</label>
+      <input type="password" [(ngModel)]="form.password" class="border rounded-xl w-full p-3 mb-3 placeholder-[#636364]"
+        placeholder="Nhập mật khẩu" />
+    </div>
+    <!-- Đã có tài khoản -->
+    <div class="text-right mb-3 text-sm">
+      <span class="text-[#636364]">Đã có tài khoản? </span>
+      <a routerLink="/auth/login" class="text-[#D94A4A] font-medium hover:underline">Đăng nhập</a>
+    </div>
+    <button (click)="signup()"
+      class="w-full bg-[#D94A4A] hover:bg-[#C63F3F] text-white py-3 rounded-xl text-[16px] transition">Đăng ký</button>
+  </div>
+</div>

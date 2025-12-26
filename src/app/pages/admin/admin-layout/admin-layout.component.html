@@ -1,0 +1,103 @@
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r flex flex-col">
+    <div class="flex items-center justify-center px-4 py-3 ">
+      <!-- <lucide-icon name="menu" class="text-2xl mr-2"></lucide-icon> -->
+      <div>
+        <h1 class="font-bold text-lg">
+          <img src="assets/LogoNTN.png" class="w-[50px] h-[50px]" alt="">
+        </h1>
+      </div>
+      <!-- <p class="text-xs text-gray-500">Trang quản lý</p> -->
+    </div>
+
+    <nav class="flex-1 mt-4 space-y-1 px-2 text-gray-700">
+      <a routerLink="/admin/dashboard" routerLinkActive="bg-[#3AA7E9] text-white"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="home" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/admin/product" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="box" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Quản lý sản phẩm</span>
+      </a>
+
+      <a routerLink="/admin/order" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="layout-dashboard" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Quản lý đơn hàng</span>
+      </a>
+      <a routerLink="/admin/type" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="layers" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Quản lý loại sản phẩm</span>
+      </a>
+      <a routerLink="/admin/category" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="list" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Quản lý danh mục </span>
+      </a>
+      <a routerLink="/admin/brand" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="tags" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Quản lý thương hiệu</span>
+      </a>
+      <a routerLink="/admin/banner" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <i class="fa-solid fa-image w-5 h-5 mr-3"></i>
+        <span>Quản lý Banner</span>
+      </a>
+
+      <a routerLink="/admin/bin" routerLinkActive="bg-[#3AA7E9] text-white"
+        class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-[#00456F]  transition-all duration-200">
+        <lucide-icon name="trash-2" class="w-5 h-5 mr-3"></lucide-icon>
+        <span>Thùng rác</span>
+      </a>
+    </nav>
+    <!-- Logout -->
+    <!-- <div class="border-t px-4 py-3">
+      <button (click)="logout()"
+        class="w-full flex items-center justify-center gap-2 hover:bg-blue-100 text-[#3AA7E9] font-medium py-2 rounded-lg transition-all duration-200">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background-color: #E7BA8366;">
+          <lucide-icon name="log-out" class="w-4 h-4 text-black"></lucide-icon>
+        </div>
+        <span class="text-black font-medium">Log out</span>
+      </button>
+    </div> -->
+
+
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col">
+    <!-- Header -->
+    <header class="flex items-center justify-between bg-white px-6 py-3 border-b">
+      <div class="flex items-center w-1/2">
+
+      </div>
+
+      <div class="flex items-center space-x-5 text-gray-600">
+        <div (click)="logout()" class="flex items-center space-x-2 cursor-pointer select-none" nz-dropdown
+          [nzDropdownMenu]="userMenu" nzTrigger="click">
+          <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+            <lucide-icon name="user" class="w-4 h-4 text-gray-700"></lucide-icon>
+          </div>
+          <span class="font-medium">{{user.fullName}}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Router Content -->
+    <main class="flex-1 overflow-auto p-6 bg-gray-50">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<!-- dropdown menu -->
+<nz-dropdown-menu #userMenu="nzDropdownMenu">
+
+</nz-dropdown-menu>

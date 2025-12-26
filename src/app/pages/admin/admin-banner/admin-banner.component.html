@@ -1,0 +1,84 @@
+<div class="bg-white p-6 rounded-xl shadow-sm border">
+
+    <!-- Accordion -->
+    <div class="flex justify-between items-center cursor-pointer mb-4" (click)="toggleSearchPanel()">
+        <h1 class="text-xl font-bold text-gray-700">Quản lý banner</h1>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto rounded-lg border shadow-sm">
+        <table class="w-full text-sm border-collapse">
+            <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="p-3 border text-center w-[5%]">#</th>
+                    <th class="p-3 border w-[25%]">Tên banner</th>
+                    <th class="p-3 border w-[25%] text-center">Ảnh</th>
+                    <!-- <th class="p-3 border w-[15%] text-center">Trạng thái</th> -->
+                    <th class="p-3 border w-[15%] text-center">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let c of bannerList; index as i" class="hover:bg-gray-50">
+                    <td class="p-3 border text-center">{{ i + 1 }}</td>
+                    <td class="p-3 border">{{ c.description }}</td>
+                    <td class="p-3 border text-center">
+                        <div class="w-[120px] mx-auto flex items-center justify-center">
+                            <img *ngIf="c.mainImage" [src]="c.mainImage" alt="image"
+                                class="max-w-full max-h-full object-contain rounded-md border" />
+                        </div>
+                        <span *ngIf="!c.mainImage" class="text-gray-400 italic">Không có</span>
+                    </td>
+                    <!-- <td class="p-3 border text-center">
+                        {{ c.status ==='Active'?"Hoạt động":"Ngừng hoạt động" }}</td> -->
+
+                    <td class="p-3 border text-center">
+                        <div class="flex justify-center gap-3">
+                            <lucide-icon name="edit" class="w-5 h-5 text-gray-500 hover:text-[#3AA7E9] cursor-pointer"
+                                (click)="edit(c)">
+                            </lucide-icon>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isModalOpen" [nzMaskClosable]="false"
+    nzTitle="{{ editBanner ? 'Cập nhật banner' : 'Thêm banner' }}" (nzOnCancel)="closeModal()" [nzFooter]="modalFooter">
+
+    <ng-container *nzModalContent>
+        <div class="grid grid-cols-1 gap-4 px-2">
+            <div>
+                <label class="text-sm text-gray-600 mb-1 block">Tên banner</label>
+                <input type="text" [(ngModel)]="form.description" class="w-full border rounded-md px-3 py-2 text-sm" />
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 mb-1 block">Ảnh (image)</label>
+                <input type="file" (change)="onFileChange($event)" accept="image/*"
+                    class="w-full border rounded-md px-3 py-2 text-sm" />
+                <span class="text-red-500">Lưu ý: Kích thước banner lớn hơn hoặc bằng 1875x600.</span>
+            </div>
+            <div *ngIf="previewImage" class="mt-2 flex justify-center">
+                <img [src]="previewImage" alt="preview" class="object-cover rounded-md border" />
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-template #modalFooter>
+        <div class="flex justify-end gap-3 pt-3">
+            <button (click)="closeModal()"
+                class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100 transition">
+                Hủy
+            </button>
+
+            <button (click)="save()"
+                class="px-4 py-2 rounded-md bg-[#3AA7E9] text-white hover:bg-[#00456F] flex items-center gap-2 transition">
+                <lucide-icon name="save" class="w-4 h-4 text-white"></lucide-icon>
+                <span>Lưu</span>
+            </button>
+        </div>
+    </ng-template>
+</nz-modal>

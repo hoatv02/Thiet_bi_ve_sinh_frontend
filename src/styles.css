@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* thêm vài utility nhỏ */
+/* Scrollbar tùy chỉnh cho danh mục trên mobile */
+
+/* Mã màu:
+#EE8A14
+#00456F
+#3AA7E9 
+#blue-500
+blue-100
+blue-50
+*/
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb #ffffff;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 10px;
+}
+
+/* Đảm bảo container-app có padding hợp lý */
+.container-app {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-app {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-app {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+.container-app {
+  @apply max-w-[1260px] mx-auto px-4;
+}
+.card {
+  @apply bg-white rounded-2xl shadow p-4;
+}
+.btn-primary {
+  @apply bg-pink-500 text-white font-semibold px-4 py-2 rounded-full hover:opacity-90;
+}
+.badge-star {
+  @apply absolute -top-3 -left-3 bg-pink-500 text-white text-xs px-2 py-1 rounded-md;
+}
+
+.menu-tab {
+  @apply px-3 py-2 rounded-3xl 
+         transition-all duration-200 
+         hover:bg-gray-700 hover:text-white;
+  /* text-gray-300 */
+}
+
+.active-tab {
+  @apply bg-[#3AA7E9] text-white 
+         px-4 py-2 rounded-3xl 
+         shadow-md font-semibold;
+}
+
+.ck.ck-content.ck-editor__editable {
+  min-height: 200px !important;
+  max-height: 270px !important;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Tùy chỉnh popup confirm của NG-ZORRO */
+.ant-modal-confirm .ant-btn-default {
+  background-color: #ffffff !important; /* nút Hủy */
+  color: #000000 !important;
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 6px !important;
+  padding: 4px 20px !important;
+  font-weight: 500 !important;
+}
+
+.ant-modal-confirm .ant-btn-default:hover {
+  background-color: #f5f5f5 !important;
+}
+
+/* Nút xác nhận */
+.ant-modal-confirm .ant-btn-primary {
+  background-color: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 4px 20px !important;
+  font-weight: 500 !important;
+}
+
+.ant-modal-confirm .ant-btn-primary:hover {
+  background-color: #e68900 !important;
+  border-color: #e68900 !important;
+}

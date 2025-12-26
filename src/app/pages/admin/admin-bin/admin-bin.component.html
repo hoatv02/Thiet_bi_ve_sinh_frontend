@@ -1,0 +1,147 @@
+<div class="bg-white p-6 rounded-xl shadow-sm border">
+  <!-- Accordion Header -->
+  <div class="flex justify-between items-center cursor-pointer select-none mb-4" (click)="toggleSearchPanel()">
+    <h1 class="text-xl font-bold text-gray-700">Thông tin tìm kiếm</h1>
+    <lucide-icon [name]="isSearchOpen ? 'chevron-up' : 'chevron-down'"
+      class="w-5 h-5 text-gray-500 transition-transform duration-300"></lucide-icon>
+  </div>
+
+  <!-- Accordion Body -->
+  <div class="transition-all duration-500 ease-in-out" [style.maxHeight]="isSearchOpen ? '800px' : '0'"
+    [style.opacity]="isSearchOpen ? '1' : '0'">
+    <!-- Bộ lọc tìm kiếm -->
+    <div class="grid grid-cols-1 xl:grid-cols-10 gap-4 mb-5">
+      <div class="col-span-4">
+        <label class="text-sm text-gray-500 mb-1 block">Tìm kiếm</label>
+        <input type="text" placeholder="Nhập tên hoặc mã sản phẩm..." [(ngModel)]="searchText"
+          class="w-full border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-orange-400 focus:outline-none" />
+      </div>
+
+      <div class="col-span-2">
+        <label class="text-sm font-medium text-gray-700 mb-1 block">Lọc theo số lượng</label>
+
+        <!-- Khung chứa -->
+        <div class="flex border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-orange-400">
+
+          <!-- Ô nhập số lượng -->
+          <input type="number" placeholder="Số lượng" [(ngModel)]="quantityValue"
+            class="flex-1 px-3 py-2 text-sm border-none focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400" />
+
+          <!-- Dropdown chọn điều kiện -->
+          <div class="relative flex items-center border-l px-2 bg-white">
+            <select [(ngModel)]="filterQuantity"
+              class="appearance-none bg-white text-sm text-gray-700 font-medium focus:outline-none pr-6 pl-2 cursor-pointer">
+              <option value="less">&lt; Nhỏ hơn</option>
+              <option value="greater">&gt; Lớn hơn</option>
+              <option value="equal">= Bằng</option>
+            </select>
+
+            <!-- Icon tùy chỉnh -->
+            <lucide-icon name="chevron-down"
+              class="absolute right-2 w-4 h-4 text-gray-500 pointer-events-none"></lucide-icon>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="col-span-2">
+        <label class="text-sm text-gray-500 mb-1 block">Loại sản phẩm</label>
+        <select [(ngModel)]="filterType" class="w-full border rounded-md px-3 py-2 text-sm">
+          <option value="">Chọn</option>
+          <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Nhóm sản phẩm</label>
+        <select [(ngModel)]="filterGroup" class="w-full border rounded-md px-3 py-2 text-sm">
+          <option value="">Chọn</option>
+          <option *ngFor="let g of groups" [value]="g">{{ g }}</option>
+        </select>
+      </div>
+
+      <div class="flex items-end justify-end">
+        <button
+          class="flex items-center bg-[#3AA7E9] hover:bg-[#00456F] text-white px-4 py-2 rounded-md text-sm space-x-2"
+          (click)="filterProducts()">
+          <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
+          <span>Tìm kiếm</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bộ lọc phụ -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Giá từ</label>
+        <input type="number" [(ngModel)]="priceFrom" class="w-full border rounded-md px-3 py-2 text-sm" />
+      </div>
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Đến</label>
+        <input type="number" [(ngModel)]="priceTo" class="w-full border rounded-md px-3 py-2 text-sm" />
+      </div>
+      <div>
+        <label class="text-sm text-gray-500 mb-1 block">Thương hiệu</label>
+        <select [(ngModel)]="filterBrand" class="w-full border rounded-md px-3 py-2 text-sm">
+          <option value="">Chọn</option>
+          <option *ngFor="let b of brands" [value]="b">{{ b }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bảng sản phẩm -->
+  <div class="overflow-x-auto rounded-lg border shadow-sm">
+    <table class="w-full text-sm border-collapse">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="p-3 border text-center w-[4%]"><input type="checkbox" /></th>
+          <th class="p-3 border text-center w-[5%]">#</th>
+          <th class="p-3 border text-center w-[10%]">Ảnh</th>
+          <th class="p-3 border text-center w-[10%]">Mã</th>
+          <th class="p-3 border text-left w-[20%]">Tên sản phẩm</th>
+          <!-- <th class="p-3 border text-center w-[10%]">Giá nhập</th> -->
+          <th class="p-3 border text-center w-[10%]">Giá bán</th>
+          <th class="p-3 border text-center w-[10%]">Loại</th>
+          <th class="p-3 border text-center w-[8%]">Số lượng</th>
+          <th class="p-3 border text-center w-[8%]">Thương hiệu</th>
+          <th class="p-3 border text-center w-[10%]">Thao tác</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let p of filteredProducts(); let i = index" class="hover:bg-gray-50">
+          <td class="p-3 border text-center"><input type="checkbox" /></td>
+          <td class="p-3 border text-center">{{ i + 1 }}</td>
+          <td class="p-3 border text-center">
+            <img [src]="p.mainImageUrl || 'assets/images/no-image.png'"
+              class="w-10 h-10 rounded-md mx-auto object-cover" alt="Sản phẩm" />
+          </td>
+          <td class="p-3 border text-center text-gray-700">{{ p.sku }}</td>
+          <td class="p-3 border text-left font-medium text-gray-800 truncate">{{ p.name }}</td>
+          <!-- <td class="p-3 border text-center">{{ p.importPrice | number }}</td> -->
+          <td class="p-3 border text-center text-blue-600 font-semibold">{{ p.price | number:'1.0-0':'vi' }}</td>
+          <td class="p-3 border text-center">{{ p.typeId}}</td>
+          <td class="p-3 border text-center font-semibold"
+            [ngClass]="p.stockQuantity < 10 ? 'text-red-500' : 'text-gray-700'">
+            {{ p.stockQuantity }}
+          </td>
+          <td class="p-3 border text-center">{{ p.brandName }}</td>
+          <td class="p-3 border text-center">
+            <div class="flex justify-center gap-3">
+              <lucide-icon name="refresh-cw" (click)="revertProduct(p.productId)"
+                class="w-5 h-5 text-gray-500 hover:text-[#3AA7E9] cursor-pointer"></lucide-icon>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Phân trang -->
+  <div class="flex justify-end items-center mt-4 text-sm text-gray-500">
+    <app-pagination class="ml-4" [pageNumber]="pageNumber" [pageSize]="pageSize" [totalItem]="totalItems"
+      (pageChange)="pageNumber = $event"></app-pagination>
+  </div>
+</div>
