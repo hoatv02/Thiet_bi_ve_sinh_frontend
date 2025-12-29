@@ -1,0 +1,693 @@
+<section class="container-app py-5">
+  <!-- Breadcrumb -->
+  <nav class="text-sm text-gray-500 mb-7">
+    <a routerLink="/" class="hover:text-[#00456F] ">Trang chủ</a> /
+    <a [routerLink]="['/list-product', slugCategoryName]" class="hover:text-[#00456F]">
+      Danh mục sản phẩm
+    </a>/
+
+    <span class="text-gray-800 font-medium">Bồn tắm</span>
+  </nav>
+
+  <!-- <div class="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
+
+
+
+    <a (click)="goHome()" class="hover:text-[#00456F]">Danh mục sản phẩm</a> /
+    <a (click)="goCart()" class="hover:text-[#00456F]">Giỏ hàng</a>
+  </div> -->
+
+
+  <!-- Main Product Info -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <!-- Left: Image -->
+    <div>
+      <img [src]="selectedImage || selectedOption?.variantImgUrl || product?.mainImageUrl" alt="product"
+        class="rounded-xl shadow-[0_2px_8px_rgba(99,99,99,0.2)] w-full h-[400px] object-contain" />
+      <div class="flex gap-3 mt-4">
+        @for (thumb of product?.galleryUrls; track thumb) {
+        <img [src]="thumb" class="w-20 h-20 rounded-md border cursor-pointer hover:border-[#3AA7E9]   object-cover"
+          (click)="selectThumb(thumb)" />
+        }
+      </div>
+    </div>
+
+    <!-- Right: Info -->
+    <div class="space-y-4">
+      <div class="flex flex-col gap-1">
+        <!-- Tiêu đề -->
+        <h1 class="text-2xl font-bold text-gray-800 leading-snug">
+          {{ product?.name }}
+        </h1>
+
+        <!-- Hàng mới: badge nằm dưới, canh phải -->
+        <div class="flex justify-end">
+          <!-- Badge tồn kho -->
+          <ng-container *ngIf="currentStock > 0; else outOfStock">
+            <span class="inline-flex items-center px-3 py-1 rounded-full
+               bg-green-100 text-green-700 text-xs font-semibold whitespace-nowrap">
+              còn hàng
+            </span>
+          </ng-container>
+
+          <ng-template #outOfStock>
+            <span class="inline-flex items-center px-3 py-1 rounded-full
+               bg-red-100 text-red-600 text-xs font-semibold whitespace-nowrap">
+              hết hàng
+            </span>
+          </ng-template>
+        </div>
+      </div>
+      <!-- Options -->
+      <!-- <div *ngIf="product?.variants?.length > 0" class="flex flex-wrap gap-3 mt-2">
+        @for (opt of product?.variants; track opt.variantId) {
+        <button (click)="selectVariant(opt)" [ngClass]="
+          selectedOption === opt
+          ? 'border-[#3AA7E9] text-[#3AA7E9]'
+          : 'border-[#E7E7E7] text-black' 
+          " class="flex flex-col justify-center items-center gap-[2px]
+             px-[27px] py-[14px] rounded-[10px] border bg-white
+             transition shadow-sm hover:shadow-md">
+          <span class="text-[14px] font-semibold">{{ opt.name }}</span>
+          <span [ngClass]="selectedOption === opt ? 'text-[#3AA7E9]' : 'text-black'" class="text-[14px] font-bold">
+            {{ (+selectedOption?.salePrice || +product.salePrice || 0) | number:'1.0-0':'vi' }}đ
+          </span>
+        </button>
+        }
+      </div> -->
+      <!-- <div *ngIf="product?.variants?.length > 0" class="mt-2 flex gap-3 overflow-x-auto pb-2">
+        @for (opt of product?.variants; track opt.variantId) {
+        <button (click)="selectVariant(opt)" class="min-w-[140px] h-[84px]
+         flex flex-col items-center justify-center gap-1
+         rounded-[10px] border bg-white
+         px-2 text-center
+         transition-all duration-200
+         hover:shadow-md
+         flex-shrink-0" [ngClass]="selectedOption === opt
+    ? 'border-[#3AA7E9] text-[#3AA7E9]'
+    : 'border-[#E7E7E7] text-black'">
+          <span class="text-[14px] font-semibold w-full line-clamp-1">
+            {{ opt.name }}
+          </span>
+          <span class="text-[14px] font-bold" [ngClass]="selectedOption === opt
+      ? 'text-[#3AA7E9]'
+      : 'text-black'">
+            {{ (+opt.salePrice || +product.salePrice || 0) | number:'1.0-0':'vi' }}đ
+          </span>
+        </button>
+        }
+      </div> -->
+      <div *ngIf="product?.variants?.length > 0" class="mt-2 flex items-center gap-2">
+
+        <!-- Prev (desktop only) -->
+        <button *ngIf="product?.variants?.length >= 3" type="button" (click)="scrollVariants('prev')" class="hidden md:flex w-8 h-8
+           items-center justify-center
+           shrink-0">
+          <lucide-icon name="chevron-left"></lucide-icon>
+        </button>
+
+        <!-- Variants list -->
+        <div #variantContainer class="flex gap-3 flex-1
+           overflow-x-auto md:overflow-x-hidden">
+          @for (opt of product?.variants; track opt.variantId) {
+          <button (click)="selectVariant(product,opt)" class="variant-item max-w-[200px] h-[84px]
+             flex flex-col items-center justify-center gap-1
+             rounded-[10px] border bg-white
+             px-2 text-center
+             transition-all duration-200
+             hover:shadow-md
+             flex-shrink-0" [ngClass]="selectedOption === opt
+        ? 'border-[#3AA7E9] text-[#3AA7E9]'
+        : 'border-[#E7E7E7] text-black'">
+
+            <span class="text-xs font-semibold w-full line-clamp-3">
+              {{ opt.name }}
+            </span>
+
+            <span class="text-xs font-bold" [ngClass]="selectedOption === opt
+          ? 'text-[#3AA7E9]'
+          : 'text-black'">
+              {{ (+opt.salePrice || +product.salePrice || 0) | number:'1.0-0':'vi' }}đ
+            </span>
+          </button>
+          }
+        </div>
+
+        <!-- Next (desktop only) -->
+        <button type="button" *ngIf="product?.variants?.length >= 3" (click)="scrollVariants('next')" class="hidden md:flex w-8 h-8
+           items-center justify-center
+           shrink-0">
+          <lucide-icon name="chevron-right"></lucide-icon>
+        </button>
+
+      </div>
+
+
+
+      <div class="flex justify-between items-center gap-3">
+        <!-- Nếu có giảm giá -->
+        @if ((selectedOption?.discountPercent ?? product?.discountPercent) > 0) {
+        <div>
+          <p class="text-2xl font-bold text-[#3AA7E9]">
+            {{ (+selectedOption?.salePrice || +product.salePrice || 0) | number:'1.0-0':'vi' }}đ
+          </p>
+
+          <div class="flex gap-5 items-center mt-1">
+            <p class="text-gray-400 line-through text-xs">
+              {{ (+selectedOption?.price || +product.price || 0) | number:'1.0-0':'vi' }}đ
+            </p>
+            <span *ngIf="!selectedOption?.discountPercent || !product.discountPercent" class="bg-red-50 text-red-500 text-xs
+                       font-semibold px-2 py-[2px] rounded-full">
+              -{{ selectedOption?.discountPercent || product.discountPercent }}%
+            </span>
+          </div>
+        </div>
+        } @else {
+        <!-- Nếu không giảm giá -->
+        <p class="text-3xl font-bold text-[#3AA7E9]">
+          {{ (selectedOption?.price || product?.price || 0) | number:'1.0-0':'vi' }}đ
+        </p>
+        }
+
+        <!-- Khối số lượng -->
+        <div class="flex items-center gap-4 ">
+          <button (click)="decreaseQty()"
+            class="w-9 h-9 flex items-center justify-center rounded-xl bg-white shadow-[0_4px_20px_rgba(9,9,81,0.08)] text-[#3AA7E9] text-lg font-semibold hover:scale-105 transition">
+            −
+          </button>
+
+          <span class="text-base font-medium text-gray-800 min-w-[24px] text-center">{{ quantity }}</span>
+
+          <button (click)="increaseQty()"
+            class="w-9 h-9 flex items-center justify-center rounded-xl bg-white shadow-[0_4px_20px_rgba(9,9,81,0.08)] text-[#3AA7E9] text-lg font-semibold hover:scale-105 transition">
+            +
+          </button>
+        </div>
+      </div>
+
+
+
+      <!--   Button -->
+      <div class="flex items-center gap-3 mt-4 w-full">
+        <button (click)="buyNow()"
+          class="flex-1 bg-[#3AA7E9] hover:bg-[#00456F] text-white py-3 rounded-md font-semibold flex items-center justify-center gap-2 transition">
+          Mua ngay
+        </button>
+
+        <button class="flex-1 border border-gray-300 py-3 rounded-md hover:bg-gray-50 text-sm font-medium transition"
+          (click)="addToCart()">
+          Thêm vào giỏ hàng
+        </button>
+      </div>
+
+      <div class="mt-6 flex flex-col gap-4">
+
+        <!-- Hàng địa chỉ -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <div
+            class="flex-1 rounded-[10px] border border-[#E7E7E7] bg-white p-3 shadow-sm flex flex-col justify-between">
+            <a href="https://www.google.com/maps/search/?api=1&query=71+Nguyễn+Sơn,+Phường+Bồ+Đề,+Hà+Nội"
+              target="_blank" rel="noopener noreferrer" class="hover:text-gray-700">
+              <p class="text-gray-800 font-medium">71 Nguyễn Sơn - P.Bồ Đề - Tp. Hà Nội</p>
+              <div class="flex items-center gap-2 text-[#3AA7E9] font-semibold mt-1">
+                <lucide-icon name="phone" class="w-4 h-4"></lucide-icon>
+                <span>033.892.2892</span>
+              </div>
+            </a>
+          </div>
+
+          <div
+            class="flex-1 rounded-[10px] border border-[#E7E7E7] bg-white p-3 shadow-sm flex flex-col justify-between">
+            <a href="https://www.google.com/maps/search/?api=1&query=4/61+Nguyễn+Sơn,+Phường+Bồ+Đề,+Hà+Nội"
+              target="_blank" rel="noopener noreferrer" class="hover:text-gray-700">
+              <p class="text-gray-800 font-medium">4/61 Nguyễn Sơn - P.Bồ Đề - Tp. Hà Nội</p>
+              <div class="flex items-center gap-2 text-[#3AA7E9] font-semibold mt-1">
+                <lucide-icon name="phone" class="w-4 h-4"></lucide-icon>
+                <span>033.892.2892</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hàng tiện ích -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex items-center gap-2 rounded-[10px] bg-white px-3 py-3 border border-[#E7E7E7]">
+            <lucide-icon name="truck" class="w-4 h-4 text-[#3AA7E9]"></lucide-icon>
+            <span class="text-gray-700">Giao hàng nhanh chóng</span>
+          </div>
+          <div class="flex items-center gap-2 rounded-[10px] bg-white px-3 py-3 border border-[#E7E7E7]">
+            <lucide-icon name="wrench" class="w-4 h-4 text-[#3AA7E9]"></lucide-icon>
+            <span class="text-gray-700">Hỗ trợ lắp đặt tận nơi</span>
+          </div>
+          <div class="flex items-center gap-2 rounded-[10px] bg-white px-3 py-3 border border-[#E7E7E7]">
+            <lucide-icon name="shield-check" class="w-4 h-4 text-[#3AA7E9]"></lucide-icon>
+            <span class="text-gray-700">Bảo hành chính hãng</span>
+          </div>
+          <div class="flex items-center gap-2 rounded-[10px] bg-white px-3 py-3 border border-[#E7E7E7]">
+            <lucide-icon name="tag" class="w-4 h-4 text-[#3AA7E9]"></lucide-icon>
+            <span class="text-gray-700">Giá tốt - Chiết khấu cao</span>
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <!-- Chi tiết sản phẩm -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+    <!-- Chi tiết -->
+    <div class="rounded-2xl shadow-[0_2px_8px_rgba(99,99,99,0.2)] p-6">
+      <h2 class="flex items-center text-2xl font-bold text-[#3AA7E9] mb-4">
+        <span class="w-2 h-8 bg-[#3AA7E9] rounded-full mr-2"></span>
+        Chi tiết
+      </h2>
+      <div class="prose text-gray-700 leading-relaxed">
+        <div [innerHTML]="product?.description"></div>
+      </div>
+      <div class="" *ngIf="youtubeEmbedUrl">
+        <h2 class="py-2 text-xl font-semibold">Video giới thiệu {{ product?.name }}</h2>
+        <iframe [src]="youtubeEmbedUrl" width="100%" height="400" allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Sản phẩm mua kèm -->
+    <div class="space-y-3  ">
+      <div class="p-6 rounded-2xl shadow-[0_2px_8px_rgba(99,99,99,0.2)]" *ngIf="relatedProducts?.length">
+        <h2 class="flex items-center text-2xl font-bold text-[#3AA7E9] mb-4">
+          <span class="w-2 h-8 bg-[#3AA7E9] rounded-full mr-2"></span>
+          Sản phẩm gợi ý
+        </h2>
+
+        <!-- 3 card, layout giống hình -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          @for (p of relatedProducts.slice(0, 3); track p.name) {
+          <div class="relative rounded-3xl bg-[#F8F8F8]
+         px-4 pt-6 pb-4 flex flex-col items-start text-left
+         shadow-sm hover:shadow-md transition" (click)="goToDetail(p)">
+            <!-- Badge Bán chạy -->
+            <span class="absolute top-3 left-2 px-3 py-1 rounded-full
+                 bg-red-50 text-red-500 text-xs font-semibold">
+              Bán chạy
+            </span>
+
+            <!-- Ảnh sản phẩm -->
+            <img [src]="p.image" alt="{{ p.name }}" class="w-full h-[140px] object-contain mb-3" />
+
+            <!-- Tên thương hiệu (hoặc tên rút gọn) -->
+            <p class="text-sm font-extrabold text-black mb-1 uppercase">
+              {{ p.brandName }}
+            </p>
+
+            <!-- Tên đầy đủ, 2 dòng -->
+            <p class="text-xs text-gray-700 leading-snug line-clamp-2 mb-2">
+              {{ p.name }}
+            </p>
+
+            <!-- Giá cũ (nếu có) -->
+            <p *ngIf="p.oldPrice" class="text-xs text-gray-400 line-through mb-1">
+              {{ p.oldPrice | number:'1.0-0':'vi' }}đ
+            </p>
+
+            <!-- Giá mới -->
+            <!-- <p class="text-sm font-medium text-[#FF0000]">
+              {{ (p.price || 0) | number:'1.0-0':'vi' }}đ
+            </p> -->
+
+            <div class="mt-auto">
+
+              <div class="flex items-center space-x-2">
+                <p class="text-gray-400 line-through text-xs" *ngIf=" product.price ">
+                  {{ product.price | number:'1.0-0':'vi' }}đ
+                </p>
+
+                <span *ngIf="product?.discountPercent" class="bg-red-50 text-red-500 text-xs
+                       font-semibold px-2 py-[2px] rounded-full">
+                  -{{ product.discountPercent }}%
+                </span>
+              </div>
+
+              <p class="text-red-500 font-bold text-sm mt-1" *ngIf="product.salePrice">
+                {{ product.salePrice | number:'1.0-0':'vi' }}đ
+              </p>
+
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+
+      <!-- Tài liệu đính kèm -->
+      <div class="p-6 rounded-2xl shadow-xl">
+        <h2 class="flex items-center text-2xl font-bold text-[#3AA7E9] mb-3">
+          <span class="w-2 h-8 bg-[#3AA7E9] rounded-full mr-2"></span>
+          Tài liệu đính kèm
+        </h2>
+
+        <ul class="list-disc pl-5 text-sm space-y-2">
+          <li>
+            @if (product?.installationSupport) {
+            <a [href]="product.installationSupport" target="_blank" rel="noopener noreferrer"
+              class="text-[#3AA7E9] hover:text-orange-700 underline">
+              Hướng dẫn lắp đặt
+            </a>
+            } @else {
+            <span class="text-gray-400">Hướng dẫn lắp đặt </span>
+            }
+          </li>
+
+          <li>
+            @if (product?.deliveryInfo) {
+            <a [href]="product.deliveryInfo" target="_blank" rel="noopener noreferrer"
+              class="text-[#3AA7E9] hover:text-orange-700 underline">
+              Hướng dẫn sử dụng
+            </a>
+            } @else {
+            <span class="text-gray-400">Hướng dẫn sử dụng </span>
+            }
+          </li>
+
+          <li>
+            @if (product?.warrantyInfo) {
+            <a [href]="product.warrantyInfo" target="_blank" rel="noopener noreferrer"
+              class="text-[#3AA7E9] hover:text-orange-700 underline">
+              Thông số kỹ thuật
+            </a>
+            } @else {
+            <span class="text-gray-400">Thông số kỹ thuật </span>
+            }
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- SECTION: SẢN PHẨM TƯƠNG TỰ-->
+@if(listSameProduct.length> 0) {
+<section class="container-app my-8">
+  <div class="flex items-center mb-4 gap-3">
+    <h2 class="text-2xl font-bold text-gray-900 m-0">
+      SẢN PHẨM TƯƠNG TỰ
+    </h2>
+    <!-- Gạch dọc -->
+    <!-- <div class="h-5 w-[1px] bg-gray-300"></div>
+    <a routerLink="" class="flex items-center gap-1 text-sm text-gray-500 hover:text-[#00456F] ">
+      Xem tất cả <span class="text-lg">››</span>
+    </a> -->
+  </div>
+
+  <!-- Slider wrapper -->
+  <div class="relative">
+    <!-- Nút trái -->
+    @if (listSameProduct.length > 4) {
+    <button (click)="prevSameSlide()" class=" hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-gray-500 hover:bg-gray-600 text-white
+           rounded-r-full p-3 shadow-md z-10  items-center justify-center">
+      <span class="text-lg">«</span>
+    </button>
+    }
+
+
+    <!-- Container -->
+    <!-- <div class="overflow-hidden w-full">
+      <div class="flex transition-transform duration-500 ease-in-out"
+        [style.transform]="'translateX(-' + sameTranslateX + 'px)'"
+        [style.width.px]="listSameProduct.length * sameItemWidth">
+        @for (product of listSameProduct; track product.productId) {
+        <div class="w-[296px] p-3 flex-shrink-0">
+          <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-3 cursor-pointer"
+            (click)="goToDetail(product.slug)">
+            <div class="relative">
+              @if (product.isHot) {
+              <span class="absolute top-2 left-2 bg-orange-100 text-[#3AA7E9]
+                           text-xs font-semibold px-2 py-1 rounded-full">
+                BÁN CHẠY
+              </span>
+              }
+              <img [src]="product.mainImageUrl" [alt]="product.name" class="w-full h-[160px] object-contain" />
+            </div>
+
+            <div class="mt-3">
+              <h3 class="font-bold text-gray-800 text-sm">{{ product.brandName }}</h3>
+              <p class="text-gray-500 text-sm line-clamp-2">
+                {{ product.name }}
+              </p>
+
+              <div class="mt-1">
+                <div class="flex items-center space-x-2">
+                  <p class="text-gray-400 line-through text-xs">
+                    {{ product.price | number:'1.0-0':'vi' }}đ
+                  </p>
+                  <span class="bg-red-50 text-red-500 text-[10px] font-semibold px-2 py-[2px] rounded-full">
+                    -{{ product.discountPercent }}%
+                  </span>
+                </div>
+
+                <p class="text-red-500 font-bold text-sm mt-1">
+                  {{ product.salePrice | number:'1.0-0':'vi' }}đ
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div> -->
+    <div class="w-full
+         overflow-x-auto md:overflow-hidden
+         scroll-smooth
+         snap-x snap-mandatory
+         scrollbar-hide">
+      <div class="flex items-stretch
+           transition-transform duration-500 ease-in-out
+           md:snap-none" [style.transform]="'translateX(-' + sameTranslateX + 'px)'"
+        [style.width.px]="listSameProduct.length * sameItemWidth">
+
+        @for (product of listSameProduct; track product.productId) {
+        <div class="w-[75vw] sm:w-[260px] md:w-[260px] lg:w-[296px]
+             p-3 flex-shrink-0 flex
+             snap-start">
+
+          <!-- CARD -->
+          <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition
+               p-3 cursor-pointer
+               h-full w-full flex flex-col" (click)="goToDetail(product)">
+
+            <!-- IMAGE -->
+            <div class="relative">
+              @if (product.isHot) {
+              <span class="absolute top-2 left-2 bg-orange-100 text-[#3AA7E9]
+                   text-xs font-semibold px-2 py-1 rounded-full">
+                BÁN CHẠY
+              </span>
+              }
+
+              <img [src]="product.mainImageUrl" [alt]="product.name" class="w-full h-[140px] sm:h-[150px] md:h-[160px]
+                   object-contain" />
+            </div>
+
+            <!-- CONTENT -->
+            <div class="mt-3 flex flex-col flex-1">
+
+              <h3 class="font-bold text-gray-800 text-sm min-h-[20px]">
+                {{ product.brandName || product.brand }}
+              </h3>
+
+              <p class="text-gray-500 text-sm line-clamp-2 min-h-[40px]">
+                {{ product.name }}
+              </p>
+
+              <!-- PRICE (ALWAYS BOTTOM) -->
+              <div class="mt-auto">
+
+                <div class="flex items-center space-x-2">
+                  <p class="text-gray-400 line-through text-xs">
+                    {{ product.price | number:'1.0-0':'vi' }}đ
+                  </p>
+
+                  <span *ngIf="product?.discountPercent" class="bg-red-50 text-red-500 text-xs
+                       font-semibold px-2 py-[2px] rounded-full">
+                    -{{ product?.discountPercent}}%
+                  </span>
+                </div>
+
+                <p class="text-red-500 font-bold text-sm mt-1">
+                  {{ product.salePrice | number:'1.0-0':'vi' }}đ
+                </p>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        }
+
+      </div>
+    </div>
+
+    @if (listSameProduct.length > 4) {
+    <button (click)="nextSameSlide()" class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 bg-gray-500 hover:bg-gray-600 text-white
+           rounded-l-full p-3 shadow-md z-10  items-center justify-center">
+      <span class="text-lg">»</span>
+    </button>
+    }
+  </div>
+</section>
+}
+
+<!-- SECTION: SẢN PHẨM ĐÃ XEM -->
+<section class="container-app my-8 " *ngIf="sanPhamDaXem.length>0">
+
+  <div class="flex items-center mb-4 gap-3">
+    <h2 class="text-2xl font-bold text-gray-900 m-0">
+      SẢN PHẨM ĐÃ XEM
+    </h2>
+    <div class="h-5 w-[1px] bg-gray-300"></div>
+    <a routerLink="/viewed-products" class="flex items-center gap-1 text-sm text-gray-500 hover:text-[#00456F] ">
+      Xem tất cả <span class="text-lg">››</span>
+    </a>
+  </div>
+
+  <div class="relative">
+    @if (sanPhamDaXem.length > 4) {
+    <button (click)="prevViewedSlide()" class="hidden md:flex  absolute left-0 top-1/2 -translate-y-1/2 bg-gray-500 hover:bg-gray-600 
+           rounded-r-full p-3 shadow-md z-10  items-center justify-center">
+      <span class="text-lg">«</span>
+    </button>
+    }
+
+
+    <!-- Container -->
+    <!-- <div class="overflow-hidden w-full">
+      <div class="flex transition-transform duration-500 ease-in-out"
+        [style.transform]="'translateX(-' + viewedTranslateX + 'px)'"
+        [style.width.px]="sanPhamDaXem.length * viewedItemWidth">
+        @for (product of sanPhamDaXem; track product.id) {
+        <div class="w-[296px] p-3 flex-shrink-0">
+          <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-3 cursor-pointer"
+            (click)="goToDetail(product.slug)">
+            <div class="relative">
+              @if (product.isHot) {
+              <span class="absolute top-2 left-2 bg-orange-100 text-[#3AA7E9]
+                           text-xs font-semibold px-2 py-1 rounded-full">
+                BÁN CHẠY
+              </span>
+              }
+              <img [src]="product.image" [alt]="product.name" class="w-full h-[160px] object-contain" />
+            </div>
+
+            <div class="mt-3">
+              <h3 class="font-bold text-gray-800 text-sm">{{ product.brand }}</h3>
+              <p class="text-gray-500 text-sm line-clamp-2">
+                {{ product.name }}
+              </p>
+
+              <div class="mt-1">
+                <div class="flex items-center space-x-2">
+                  <p class="text-gray-400 line-through text-xs">
+                    {{ product.oldPrice | number:'1.0-0':'vi' }}đ
+                  </p>
+                  <span class="bg-red-50 text-red-500 text-[10px] font-semibold px-2 py-[2px] rounded-full">
+                    -{{ product.discount }}%
+                  </span>
+                </div>
+
+                <p class="text-red-500 font-bold text-sm mt-1">
+                  {{ product.price | number:'1.0-0':'vi' }}đ
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div> -->
+    <div class="w-full
+         overflow-x-auto md:overflow-hidden
+         scroll-smooth
+         snap-x snap-mandatory
+         scrollbar-hide">
+      <div class="flex items-stretch
+           transition-transform duration-500 ease-in-out
+           md:snap-none" [style.transform]="'translateX(-' + viewedTranslateX + 'px)'"
+        [style.width.px]="sanPhamDaXem.length * viewedItemWidth">
+
+        @for (product of sanPhamDaXem; track product.id) {
+        <div class="w-[75vw] sm:w-[260px] md:w-[260px] lg:w-[296px]
+             p-3 flex-shrink-0 flex
+             snap-start">
+
+          <!-- CARD -->
+          <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition
+               p-3 cursor-pointer
+               h-full w-full flex flex-col" (click)="goToDetail(product)">
+
+            <!-- IMAGE -->
+            <div class="relative">
+              @if (product.isHot) {
+              <span class="absolute top-2 left-2 bg-orange-100 text-[#3AA7E9]
+                   text-xs font-semibold px-2 py-1 rounded-full">
+                BÁN CHẠY
+              </span>
+              }
+
+              <img [src]="product.image" [alt]="product.name" class="w-full h-[140px] sm:h-[150px] md:h-[160px]
+                   object-contain" />
+            </div>
+
+            <!-- CONTENT -->
+            <div class="mt-3 flex flex-col flex-1">
+
+              <h3 class="font-bold text-gray-800 text-sm min-h-[20px]">
+                {{ product.brand }}
+              </h3>
+
+              <p class="text-gray-500 text-sm line-clamp-2 min-h-[40px]">
+                {{ product.name }}
+              </p>
+
+              <!-- PRICE -->
+              <div class="mt-auto">
+
+                <div class="flex items-center space-x-2">
+                  <p class="text-gray-400 line-through text-xs">
+                    {{ product.oldPrice | number:'1.0-0':'vi' }}đ
+                  </p>
+
+                  <span *ngIf="product?.discount" class="bg-red-50 text-red-500 text-xs
+                       font-semibold px-2 py-[2px] rounded-full">
+                    -{{ product.discount }}%
+                  </span>
+                </div>
+
+                <p class="text-red-500 font-bold text-sm mt-1">
+                  {{ product.price | number:'1.0-0':'vi' }}đ
+                </p>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        }
+
+      </div>
+    </div>
+
+    @if (sanPhamDaXem.length > 4) {
+    <button (click)="nextViewedSlide()" class="hidden md:flex  absolute right-0 top-1/2 -translate-y-1/2 bg-gray-500 hover:bg-gray-600 
+           rounded-l-full p-3 shadow-md z-10  items-center justify-center">
+      <span class="text-lg">»</span>
+    </button>
+    }
+  </div>
+</section>

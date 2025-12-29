@@ -1,0 +1,105 @@
+<div class="bg-white p-6 rounded-xl shadow-sm border">
+  <!-- Accordion -->
+  <div class="flex justify-between items-center cursor-pointer mb-4" (click)="toggleSearchPanel()">
+    <h1 class="text-xl font-bold text-gray-700">Thông tin tìm kiếm</h1>
+    <lucide-icon [name]="isSearchOpen ? 'chevron-up' : 'chevron-down'" class="w-5 h-5 text-gray-500"></lucide-icon>
+  </div>
+
+  <div class="transition-all" [style.maxHeight]="isSearchOpen ? '200px' : '0'"
+    [style.opacity]="isSearchOpen ? '1' : '0'">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div>
+        <label class="text-sm text-gray-600 block mb-1">Tên thương hiệu</label>
+        <input type="text" [(ngModel)]="searchText" class="w-full border rounded-md px-3 py-2 text-sm"
+          placeholder="Nhập tên thương hiệu..." (keyup.enter)="applySearch()">
+      </div>
+
+      <div class="flex items-end">
+        <button (click)="applySearch()" class="bg-[#3AA7E9] hover:bg-[#00456F] text-white px-4 py-2 rounded-md">
+          Tìm kiếm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-end mb-4 gap-3">
+    <button class="flex items-center bg-black text-white px-4 py-2 rounded-md" (click)="openModal()">
+      <lucide-icon name="plus" class="w-4 h-4 mr-2 text-white"></lucide-icon>
+      Thêm thương hiệu
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-lg border shadow-sm">
+    <table class="w-full text-sm border-collapse">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="p-3 border text-center w-[5%]">#</th>
+          <th class="p-3 border w-[30%]">Tên thương hiệu</th>
+          <th class="p-3 border w-[25%] text-center">Ảnh</th>
+          <th class="p-3 border w-[20%] text-center">Thao tác</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let b of filteredList; index as i" class="hover:bg-gray-50">
+          <td class="p-3 border text-center">{{ i + 1 }}</td>
+          <td class="p-3 border">{{ b.name }}</td>
+          <td class="p-3 border text-center">
+            <img *ngIf="b.img" [src]="b.img" alt="brand" class="h-12 w-12 object-cover rounded-md mx-auto border" />
+            <span *ngIf="!b.img" class="text-gray-400 italic">Không có ảnh</span>
+          </td>
+          <td class="p-3 border text-center">
+            <div class="flex justify-center gap-3">
+              <lucide-icon name="edit" class="w-5 h-5 text-gray-500 hover:text-[#3AA7E9] cursor-pointer"
+                (click)="openModal(b)"></lucide-icon>
+              <lucide-icon name="trash-2" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer"
+                (click)="deleteBrand(b.id)"></lucide-icon>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isModalOpen" [nzMaskClosable]="false"
+  nzTitle="{{ editingCategory ? 'Cập nhật thương hiệu' : 'Thêm thương hiệu' }}" (nzOnCancel)="closeModal()"
+  [nzFooter]="modalFooter">
+
+  <ng-container *nzModalContent>
+    <div class="grid grid-cols-1 gap-4 px-2">
+      <div>
+        <label class="text-sm text-gray-600 mb-1 block">Tên thương hiệu</label>
+        <input type="text" [(ngModel)]="formData.name" class="w-full border rounded-md px-3 py-2 text-sm"
+          placeholder="Nhập tên thương hiệu..." />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-600 mb-1 block">Ảnh (image)</label>
+        <input type="file" (change)="onFileChange($event)" accept="image/*"
+          class="w-full border rounded-md px-3 py-2 text-sm" />
+      </div>
+
+      <div *ngIf="previewImage" class="mt-2 flex justify-center">
+        <img [src]="previewImage" alt="preview" class="h-24 w-24 object-cover rounded-md border" />
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #modalFooter>
+    <div class="flex justify-end gap-3 pt-3">
+      <button (click)="closeModal()" class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100 transition">
+        Hủy
+      </button>
+
+      <button (click)="save()"
+        class="px-4 py-2 rounded-md bg-[#3AA7E9] text-white hover:bg-[#00456F] flex items-center gap-2 transition">
+        <lucide-icon name="save" class="w-4 h-4 text-white"></lucide-icon>
+        <span>Lưu</span>
+      </button>
+    </div>
+  </ng-template>
+</nz-modal>

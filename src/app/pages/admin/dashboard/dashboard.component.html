@@ -1,0 +1,112 @@
+<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+
+<!-- GRID 1 -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+  <!-- Sản phẩm -->
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <div class="flex justify-between mb-2">
+      <h2 class="font-semibold text-gray-700">Sản phẩm đang trên Website</h2>
+      <a class="text-[#3AA7E9] text-sm cursor-pointer hover:underline" [routerLink]="['/admin/product']">
+        Xem chi tiết
+      </a>
+    </div>
+    <p class="text-3xl font-bold text-gray-900">{{ totalProducts }}</p>
+    <p class="text-sm text-gray-500">
+      Trong đó
+      <span class="font-semibold text-green-600">{{ inStock }}</span> còn hàng,
+      <span class="font-semibold text-red-500">{{ outOfStock }}</span> hết hàng
+    </p>
+  </div>
+
+  <!-- Quảng cáo -->
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="font-semibold text-gray-800 text-base"> Trạng thái các đơn hàng</h2>
+      <a class="text-[#3AA7E9] text-sm font-medium flex items-center gap-1 cursor-pointer hover:underline"
+        [routerLink]="['/admin/order']">
+        Xem chi tiết
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="flex items-center justify-between">
+      <!-- Donut chart -->
+      <div class="w-[160px] h-[160px]">
+        <apx-chart [series]="chartAds.series!" [chart]="chartAds.chart!" [labels]="chartAds.labels!"
+          [colors]="chartAds.colors!" [dataLabels]="chartAds.dataLabels!" [legend]="chartAds.legend!"
+          [plotOptions]="chartAds.plotOptions!" [responsive]="chartAds.responsive!">
+        </apx-chart>
+      </div>
+
+      <!-- Legend bên phải -->
+      <div class="text-sm text-gray-700 space-y-2 ml-3">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-black"></span>
+          <span>Đã hủy</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-[#3AA7E9]"></span>
+          <span>Thành công</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-yellow-200"></span>
+          <span>Đang giao</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Quan tâm -->
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <h2 class="font-semibold text-gray-700 mb-3">Sản phẩm được quan tâm nhiều nhất</h2>
+
+    <ul class="space-y-2 text-sm text-gray-600">
+
+      <li *ngFor="let item of topProducts; index as i" class="flex justify-between">
+        <span>{{ i + 1 }}. {{ item.name }}</span>
+
+        <span [ngClass]="item.inStock ? 'text-green-600' : 'text-red-500'">
+          {{ item.inStock ? 'Còn hàng' : 'Hết hàng' }}
+        </span>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+<!-- GRID 2 -->
+<!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <h2 class="font-semibold text-gray-700 mb-2">Số nhà phân phối</h2>
+    <p class="text-3xl font-bold text-gray-900">{{ totalDistributors }}</p>
+    <p class="text-sm text-gray-500">Nhà phân phối đang hoạt động</p>
+  </div>
+
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <h2 class="font-semibold text-gray-700 mb-2">Sản phẩm đã thêm vào giỏ</h2>
+    <p class="text-3xl font-bold text-gray-900">{{ totalAddedToCart }}</p>
+    <p class="text-sm text-gray-500">Sản phẩm đã thêm vào giỏ hàng</p>
+  </div>
+</div> -->
+
+<!-- GRID 3: Biểu đồ -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <h2 class="font-semibold text-gray-700 mb-2">Số lượt truy cập Website</h2>
+    <apx-chart [series]="chartWebsite.series!" [chart]="chartWebsite.chart!" [xaxis]="chartWebsite.xaxis!"
+      [stroke]="chartWebsite.stroke!" [colors]="chartWebsite.colors!" [dataLabels]="chartWebsite.dataLabels!"
+      [grid]="chartWebsite.grid!">
+    </apx-chart>
+  </div>
+
+  <div class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition">
+    <h2 class="font-semibold text-gray-700 mb-2">Số người đã liên hệ qua Zalo</h2>
+    <apx-chart [series]="chartZalo.series!" [chart]="chartZalo.chart!" [xaxis]="chartZalo.xaxis!"
+      [stroke]="chartZalo.stroke!" [colors]="chartZalo.colors!" [dataLabels]="chartZalo.dataLabels!"
+      [grid]="chartZalo.grid!">
+    </apx-chart>
+  </div>
+</div>

@@ -1,0 +1,1229 @@
+<!-- <div class="bg-black text-white text-sm py-1 text-right pr-10">
+  HOTLINE:
+  <span class="font-semibold">0243.873.1640 - 033.892.2892</span>
+</div>
+
+<header class="bg-[#0a0a0a] text-white shadow-md">
+  <div class="max-w-[1280px] mx-auto flex items-center justify-between py-3 px-6">
+
+    <div class="flex items-center gap-4">
+
+      <a routerLink="/" class="text-xl font-bold tracking-wide">Logo</a>
+
+      <div class="relative group">
+        <button
+          class="flex items-center gap-2 bg-[#3AA7E9] text-white font-medium px-4 py-2 rounded-full hover:bg-[#00456F] transition">
+          <lucide-icon name="menu" class="w-4 h-4"></lucide-icon>
+          Danh mục
+          <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
+        </button>
+
+        <div class="absolute left-0 top-full w-full h-5 bg-transparent group-hover:block hidden z-40">
+        </div>
+
+        <div
+          class="absolute left-0 top-[calc(100%+20px)] hidden group-hover:flex bg-white shadow-lg rounded-lg overflow-hidden z-50 w-[900px] p-6 gap-6 transition-all duration-300 ease-out opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 pointer-events-auto">
+          <div class="w-1/4 border-r pr-4 space-y-2">
+            @for (cate of type; track cate.slug) {
+            <div (mouseenter)="onTypeHover(cate.slug)" (click)="goToType(cate.slug)"
+              class="flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+              <div class="flex items-center gap-2">
+                <lucide-icon name="list" class="w-4 h-4 text-[#3AA7E9] "></lucide-icon>
+                <span class="text-sm font-medium">{{ cate.name }}({{cate.total}})</span>
+              </div>
+              <lucide-icon name="chevron-right" class="w-4 h-4 text-gray-400"></lucide-icon>
+            </div>
+            }
+          </div>
+
+          <div class="flex-1 flex flex-col gap-6">
+            <div>
+              <h4 class="font-semibold mb-3 text-gray-800">Theo sản phẩm</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (item of activeType?.categories; track item.name) {
+                <div [routerLink]="['/list-product', activeType.slug, item.slug]"
+                  class="border border-gray-200 px-3 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-gray-50 cursor-pointer">
+                  <img [src]="item.img" class="w-5 h-5" />
+                  <span class="text-black text-center font-roboto font-semibold text-[14px] leading-[21px]">
+                    {{ item.name }}
+                  </span>
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Theo thương hiệu</h4>
+
+                <div class="grid grid-cols-3 gap-6 items-center justify-items-center opacity-90">
+                  @for (brand of brands; track brand.id) {
+                  <div class="block w-full flex justify-center cursor-pointer" (click)="navigateToBrand(brand)">
+                    <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name"
+                      [title]="brand.name"
+                      class="h-10 object-contain transition-transform duration-300 hover:scale-110" />
+                  </div>
+                  }
+                </div>
+              </div>
+
+
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Sản phẩm nổi bật</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  @for (p of featuredProducts; track p.name) {
+                  <div [routerLink]="['/detail-product', p.slug]"
+                    class="flex flex-col items-center border border-gray-200 rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                    <img [src]="p.mainImageUrl" class="w-8 h-8 mb-1" />
+                    <span class="text-xs font-medium text-gray-700">{{ p.name }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <nav class="flex items-center gap-3 text-sm font-medium">
+      <a routerLink="/about-us" routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true }"
+        class="menu-tab">
+        Giới thiệu
+      </a>
+
+      <a routerLink="/my-service" routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true }"
+        class="menu-tab">
+        Dịch vụ
+      </a>
+
+      <a routerLink="/policy" routerLinkActive="active-tab" [routerLinkActiveOptions]="{ exact: true }"
+        class="menu-tab">
+        Chính sách
+      </a>
+    </nav>
+
+
+    <div class="relative flex items-center  w-[250px]">
+      <div class="bg-white rounded-full overflow-hidden w-[250px]">
+        <input type="text" placeholder="Tìm kiếm..." (input)="onSearchInput($event)" [(ngModel)]="searchText"
+          class="flex-1 px-3 py-2 text-sm text-black outline-none" />
+        <button class="pl-6">
+          <lucide-icon name="search" class="w-4 h-4 text-black/70"></lucide-icon>
+        </button>
+      </div>
+
+
+
+      @if (showResults && searchText !=='') {
+      <div
+        class="absolute top-full left-0 w-[380px]  bg-white z-[9999] border border-gray-200 shadow-lg rounded-lg mt-1 max-h-[300px] overflow-y-auto">
+
+        @if (isLoading) {
+        <div class="p-4 text-center text-sm text-gray-600">
+          <div class="flex items-center justify-center gap-2">
+            <span class="w-4 h-4 border-2 border-[#3AA7E9] border-t-transparent rounded-full animate-spin"></span>
+            Đang tìm kiếm...
+          </div>
+        </div>
+        }
+
+        @if (!isLoading && searchResults.length > 0) {
+        @for (item of searchResults; track item.productId) {
+        <div (click)="navigateToProduct(item.slug)"
+          class="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer">
+          <img [src]="item.mainImage || 'assets/no-image.png'" class="w-8 h-8 object-cover rounded" />
+
+          <div class="flex flex-col leading-tight">
+            <span class="text-sm text-gray-800 font-medium line-clamp-1">{{ item.name }}</span>
+            <span class="text-xs text-[#3AA7E9]  font-semibold">{{ item.price | number }}đ</span>
+          </div>
+        </div>
+        }
+        }
+
+        @if (!isLoading && searchResults.length === 0) {
+        <div class="p-4 text-center text-sm text-gray-500">
+          Không tìm thấy sản phẩm
+        </div>
+        }
+
+      </div>
+      }
+
+    </div>
+
+    <div class="flex items-center gap-5">
+      <div class="relative" #cartDropdown (click)="toggleCartDropdown($event)">
+        <button class="relative flex items-center gap-1 hover:text-[#3AA7E9] ">
+          <span>Giỏ hàng</span>
+          <lucide-icon name="shopping-cart" class="w-5 h-5"></lucide-icon>
+
+          @if (cartCount > 0) {
+          <span class="absolute -top-2 -right-2 bg-[#3AA7E9] text-white text-xs px-1 rounded-full">
+            {{ cartCount }}
+          </span>
+          }
+        </button>
+
+        @if (showCartDropdown) {
+        <div
+          class="absolute -right-32 top-full mt-3 w-[400px] bg-white rounded-lg shadow-xl border border-gray-100 z-50"
+          (click)="$event.stopPropagation()">
+
+          @if (cartItems.length > 0) {
+
+          <div class="max-h-[300px] overflow-y-auto divide-y divide-gray-100">
+            @for (item of cartItems; track item.name) {
+            <div class="flex items-center gap-3 p-3">
+              <img [src]="item.mainImageUrl" alt="{{ item.name }}"
+                class="w-14 h-14 object-cover rounded-md border shrink-0" />
+
+              <div class="flex-1 flex items-center justify-between gap-2 min-h-[56px]">
+                <div class="font-medium text-gray-800 w-[65%] break-words leading-snug line-clamp-2">
+                  {{ item.name }}
+                </div>
+
+                <div class="text-sm text-gray-800 w-[35%] flex items-center justify-between shrink-0 text-right">
+                  <span class="text-gray-600 ml-1">x {{ item.quantity }}</span>
+                  <span class="font-semibold text-[#3AA7E9] ">{{ item.price | number }}đ</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="flex justify-between items-center gap-3 p-3 border-t">
+            <button (click)="navigateTo('/cart'); $event.stopPropagation()"
+              class="flex-1 border border-[#3AA7E9] text-[#3AA7E9]  py-2 rounded-md font-medium hover:bg-[#fff5eb] transition">
+              Xem chi tiết
+              <lucide-icon name="shopping-cart" class="w-4 h-4 inline mr-1"></lucide-icon>
+            </button>
+            <button (click)="navigateTo('/checkout'); $event.stopPropagation()"
+              class="flex-1 bg-[#3AA7E9] text-white py-2 rounded-md font-medium hover:bg-[#00456F] transition">
+              Đặt hàng
+              <lucide-icon name="check-check" class="w-4 h-4 inline mr-1"></lucide-icon>
+            </button>
+          </div>
+
+          } @else {
+          <div class="p-6 text-center text-gray-500">
+            🛒 Hiện tại chưa có sản phẩm nào trong giỏ hàng
+          </div>
+          }
+        </div>
+        }
+      </div>
+
+
+
+      <button (click)="login()" class="flex items-center gap-1 hover:text-[#3AA7E9] ">
+        <span>Đăng nhập</span>
+        <lucide-icon name="user" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</header> -->
+<!-- 
+<div class="bg-black backdrop-blur-sm fixed top-0 left-0 w-full z-50">
+  <div class="max-w-7xl mx-auto text-white text-xs md:text-sm py-1
+              text-center md:text-right md:pr-10">
+    HOTLINE:
+    <span class="font-semibold">0243.873.1640 - 033.892.2892</span>
+  </div>
+</div>
+
+<header class="shadow-md fixed top-[20px] left-0 w-full z-40 backdrop-blur-sm transition-all duration-300" [ngClass]="isHome 
+    ? 'bg-[#0a0a0a]/70 text-white' 
+    : 'bg-white text-black'">
+  <div class="max-w-[1280px] mx-auto flex flex-wrap items-center justify-between gap-4 py-4 px-4 lg:px-6">
+    <div class="flex items-center gap-4 flex-shrink min-w-[200px]">
+      <a routerLink="/" class="text-lg md:text-xl font-bold tracking-wide whitespace-nowrap">
+        Logo
+      </a>
+      <div class="relative group hidden lg:block">
+        <button
+          class="flex items-center gap-2 bg-[#3AA7E9] text-white font-medium px-4 py-2 rounded-full hover:bg-[#00456F] transition">
+          <lucide-icon name="menu" class="w-4 h-4"></lucide-icon>
+          Danh mục
+          <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
+        </button>
+        <div class="absolute left-0 top-full w-full h-5 bg-transparent hidden group-hover:block"></div>
+        <div
+          class="absolute left-0 top-[calc(100%+20px)] hidden group-hover:flex bg-white shadow-lg rounded-lg overflow-hidden z-50 w-[900px] p-6 gap-6 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+
+          <div class="w-1/4 border-r pr-4 space-y-2">
+            @for (cate of type; track cate.slug) {
+            <div (mouseenter)="onTypeHover(cate.slug)" (click)="goToType(cate.slug)"
+              class="flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+              <div class="flex items-center gap-2">
+                <lucide-icon name="list" class="w-4 h-4 text-[#3AA7E9] "></lucide-icon>
+                <span class="text-sm font-medium">{{ cate.name }}({{cate.total}})</span>
+              </div>
+              <lucide-icon name="chevron-right" class="w-4 h-4 text-gray-400"></lucide-icon>
+            </div>
+            }
+          </div>
+
+          <div class="flex-1 flex flex-col gap-6">
+            <div>
+              <h4 class="font-semibold mb-3 text-gray-800">Theo sản phẩm</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (item of activeType?.categories; track item.name) {
+                <div [routerLink]="['/list-product', activeType.slug, item.slug]"
+                  class="border border-gray-200 px-3 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-gray-50 cursor-pointer">
+                  <img [src]="item.img" class="w-5 h-5" />
+                  <span class="text-black font-semibold text-[14px]">{{ item.name }}</span>
+                </div>
+                }
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Theo thương hiệu</h4>
+                <div class="grid grid-cols-3 gap-6 items-center justify-items-center opacity-90">
+                  @for (brand of brands; track brand.id) {
+                  <div class="block w-full flex justify-center cursor-pointer" (click)="navigateToBrand(brand)">
+                    <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name"
+                      [title]="brand.name"
+                      class="h-10 object-contain transition-transform duration-300 hover:scale-110" />
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Sản phẩm nổi bật</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  @for (p of featuredProducts; track p.name) {
+                  <div [routerLink]="['/detail-product', p.slug]"
+                    class="flex flex-col items-center border border-gray-200 rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                    <img [src]="p.mainImageUrl" class="w-8 h-8 mb-1" />
+                    <span class="text-xs font-medium text-gray-700 text-center">{{ p.name }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <nav class="hidden lg:flex items-center gap-5 text-sm font-medium whitespace-nowrap">
+      <a routerLink="/about-us" routerLinkActive="active-tab" class="menu-tab">Giới thiệu</a>
+      <a routerLink="/my-service" routerLinkActive="active-tab" class="menu-tab">Dịch vụ</a>
+      <a routerLink="/policy" routerLinkActive="active-tab" class="menu-tab">Chính sách</a>
+    </nav>
+    <div class="flex items-center gap-4 flex-shrink-0">
+      <div class="relative w-[140px] sm:w-[180px] md:w-[220px] lg:w-[250px]">
+        <div class="bg-white rounded-full border-2 border-[#3AA7E9] overflow-hidden flex">
+          <input type="text" placeholder="Tìm kiếm..." (input)="onSearchInput($event)" [(ngModel)]="searchText"
+            class="flex-1 px-3 py-2 text-sm text-black outline-none" />
+          <button class="px-3">
+            <lucide-icon name="search" class="w-4 h-4 text-black/70"></lucide-icon>
+          </button>
+        </div>
+
+        @if (showResults && searchText !=='') {
+        <div
+          class="absolute top-full left-0 w-full bg-white z-[9999] border border-gray-200 shadow-lg rounded-lg mt-1 max-h-[300px] overflow-y-auto">
+
+          @if (isLoading) {
+          <div class="p-4 text-center text-sm text-gray-600">
+            <span
+              class="w-4 h-4 border-2 border-[#3AA7E9] border-t-transparent rounded-full animate-spin inline-block"></span>
+            Đang tìm kiếm...
+          </div>
+          }
+
+          @if (!isLoading && searchResults.length > 0) {
+          @for (item of searchResults; track item.productId) {
+          <div (mousedown)="navigateToProduct(item.slug)"
+            class="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer">
+            <img [src]="item.mainImage || 'assets/no-image.png'" class="w-8 h-8 object-cover rounded" />
+            <div class="leading-tight">
+              <span class="text-sm text-gray-800 font-medium line-clamp-1">{{ item.name }}</span>
+              <span class="text-xs text-[#3AA7E9]  font-semibold">{{ item.price | number }}đ</span>
+            </div>
+          </div>
+          }
+          }
+          @if (!isLoading && searchResults.length === 0) {
+          <div class="p-4 text-center text-sm text-gray-500">
+            Không tìm thấy sản phẩm
+          </div>
+          }
+        </div>
+        }
+      </div>
+      <div class="relative" #cartDropdown (click)="toggleCartDropdown($event)">
+        <button class="relative flex items-center gap-1 hover:text-[#3AA7E9]  whitespace-nowrap">
+          <span class="hidden sm:block">Giỏ hàng</span>
+          <lucide-icon name="shopping-cart" class="w-5 h-5"></lucide-icon>
+
+          @if (cartCount > 0) {
+          <span class="absolute -top-2 -right-2 bg-[#3AA7E9] text-white text-xs px-1 rounded-full">
+            {{ cartCount }}
+          </span>
+          }
+        </button>
+
+        @if (showCartDropdown) {
+        <div
+          class="absolute -right-32 top-full mt-3 w-[500px] bg-white rounded-lg shadow-xl border border-gray-100 z-50"
+          (click)="$event.stopPropagation()">
+
+          @if (cartItems.length > 0) {
+          <div class="max-h-[300px] overflow-y-auto divide-y divide-gray-100">
+            @for (item of cartItems; track item.name) {
+            <div class="flex items-center gap-3 p-3">
+              <img [src]="item.mainImageUrl" alt="{{ item.name }}"
+                class="w-14 h-14 object-cover rounded-md border shrink-0" />
+              <div class="flex-1 flex justify-between gap-2 min-h-[56px]">
+                <div class="font-medium text-gray-800 w-[65%] line-clamp-2">
+                  {{ item.name }}
+                </div>
+                <div class="text-sm text-gray-800 w-[35%] flex justify-between text-right">
+                  <span class="text-gray-600 ml-1">x {{ item.quantity }}</span>
+                  <span class="font-semibold text-[#3AA7E9] ">{{ item.salePrice | number }}đ</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="flex justify-between items-center gap-3 p-3 border-t">
+            <button (click)="navigateTo('/cart'); $event.stopPropagation()"
+              class="flex-1 border border-[#3AA7E9] text-[#3AA7E9]  py-2 rounded-md font-medium hover:bg-[#fff5eb]">
+              Xem chi tiết
+            </button>
+
+            <button (click)="navigateTo('/checkout'); $event.stopPropagation()"
+              class="flex-1 bg-[#3AA7E9] text-white py-2 rounded-md font-medium hover:bg-[#00456F]">
+              Đặt hàng
+            </button>
+          </div>
+
+          } @else {
+          <div class="p-6 text-center text-gray-500">
+            🛒 Hiện tại chưa có sản phẩm nào trong giỏ hàng
+          </div>
+          }
+        </div>
+        }
+      </div>
+<button (click)="login()" class="flex items-center gap-1 hover:text-[#3AA7E9]  whitespace-nowrap">
+  <span class="hidden sm:block">Đăng nhập</span>
+  <lucide-icon name="user" class="w-5 h-5"></lucide-icon>
+</button>
+
+</div>
+</div>
+</header> -->
+<!-- 
+<div class="bg-black backdrop-blur-sm fixed top-0 left-0 w-full z-50">
+  <div class="max-w-7xl mx-auto text-white text-xs md:text-sm py-1 text-center md:text-right md:pr-4 lg:pr-10">
+    HOTLINE:
+    <span class="font-semibold">0243.873.1640 - 033.892.2892</span>
+  </div>
+</div>
+
+<header class="shadow-md fixed top-[20px] left-0 w-full z-40 backdrop-blur-sm transition-all duration-300" [ngClass]="isHome 
+    ? 'bg-[#0a0a0a]/70 text-white' 
+    : 'bg-white text-black'">
+  <div class="max-w-[1280px] mx-auto flex items-center justify-between gap-4 py-4 px-4 lg:px-6">
+    <button class="lg:hidden" (click)="toggleMobileMenu()">
+      <lucide-icon [name]="mobileMenuOpen ? 'x' : 'menu'" class="w-6 h-6"></lucide-icon>
+    </button>
+    <a routerLink="/"
+      class="text-lg md:text-xl font-bold tracking-wide whitespace-nowrap lg:flex-shrink-0 mx-auto lg:mx-0">
+      Logo
+    </a>
+
+    <div class="flex items-center gap-3 lg:hidden">
+      <button (click)="toggleMobileSearch()" class="relative">
+        <lucide-icon name="search" class="w-5 h-5"></lucide-icon>
+      </button>
+
+      <div class="relative" #cartDropdown (click)="toggleCartDropdown($event)">
+        <button class="relative">
+          <lucide-icon name="shopping-cart" class="w-5 h-5"></lucide-icon>
+          @if (cartCount > 0) {
+          <span class="absolute -top-2 -right-2 bg-[#3AA7E9] text-white text-xs px-1 rounded-full">
+            {{ cartCount }}
+          </span>
+          }
+        </button>
+      </div>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-4 flex-shrink min-w-[200px]">
+      <div class="relative group">
+        <button
+          class="flex items-center gap-2 bg-[#3AA7E9] text-white font-medium px-4 py-2 rounded-full hover:bg-[#00456F] transition">
+          <lucide-icon name="menu" class="w-4 h-4"></lucide-icon>
+          Danh mục
+          <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
+        </button>
+        <div class="absolute left-0 top-full w-full h-5 bg-transparent hidden group-hover:block"></div>
+        <div
+          class="absolute left-0 top-[calc(100%+20px)] hidden group-hover:flex bg-white shadow-lg rounded-lg overflow-hidden z-50 w-[900px] p-6 gap-6 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+
+          <div class="w-1/4 border-r pr-4 space-y-2">
+            @for (cate of type; track cate.slug) {
+            <div (mouseenter)="onTypeHover(cate.slug)" (click)="goToType(cate.slug)"
+              class="flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+              <div class="flex items-center gap-2">
+                <lucide-icon name="list" class="w-4 h-4 text-[#3AA7E9] "></lucide-icon>
+                <span class="text-sm font-medium">{{ cate.name }}({{cate.total}})</span>
+              </div>
+              <lucide-icon name="chevron-right" class="w-4 h-4 text-gray-400"></lucide-icon>
+            </div>
+            }
+          </div>
+
+          <div class="flex-1 flex flex-col gap-6">
+            <div>
+              <h4 class="font-semibold mb-3 text-gray-800">Theo sản phẩm</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (item of activeType?.categories; track item.name) {
+                <div [routerLink]="['/list-product', activeType.slug, item.slug]"
+                  class="border border-gray-200 px-3 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-gray-50 cursor-pointer">
+                  <img [src]="item.img" class="w-5 h-5" />
+                  <span class="text-black font-semibold text-[14px]">{{ item.name }}</span>
+                </div>
+                }
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Theo thương hiệu</h4>
+                <div class="grid grid-cols-3 gap-6 items-center justify-items-center opacity-90">
+                  @for (brand of brands; track brand.id) {
+                  <div class="block w-full flex justify-center cursor-pointer" (click)="navigateToBrand(brand)">
+                    <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name"
+                      [title]="brand.name"
+                      class="h-10 object-contain transition-transform duration-300 hover:scale-110" />
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Sản phẩm nổi bật</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  @for (p of featuredProducts; track p.name) {
+                  <div [routerLink]="['/detail-product', p.slug]"
+                    class="flex flex-col items-center border border-gray-200 rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                    <img [src]="p.mainImageUrl" class="w-8 h-8 mb-1" />
+                    <span class="text-xs font-medium text-gray-700 text-center">{{ p.name }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if (showMobileSearch) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden" (click)="showMobileSearch = false">
+      <div class="absolute top-0 left-0 right-0 bg-white p-4" (click)="$event.stopPropagation()">
+        <div class="flex items-center gap-2">
+          <div class="flex-1 bg-white rounded-full border-2 border-[#3AA7E9] overflow-hidden flex">
+            <input type="text" placeholder="Tìm kiếm..." (input)="onSearchInput($event)" [(ngModel)]="searchText"
+              class="flex-1 px-3 py-2 text-sm text-black outline-none w-full" autofocus />
+            <button class="px-3">
+              <lucide-icon name="search" class="w-4 h-4 text-black/70"></lucide-icon>
+            </button>
+          </div>
+          <button (click)="showMobileSearch = false" class="text-gray-600">
+            <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
+          </button>
+        </div>
+        @if (showResults && searchText !=='') {
+        <div
+          class="absolute left-0 right-0 top-full bg-white z-[9999] border border-gray-200 shadow-lg rounded-lg mt-1 max-h-[300px] overflow-y-auto">
+          @if (isLoading) {
+          <div class="p-4 text-center text-sm text-gray-600">
+            <span
+              class="w-4 h-4 border-2 border-[#3AA7E9] border-t-transparent rounded-full animate-spin inline-block"></span>
+            Đang tìm kiếm...
+          </div>
+          }
+
+          @if (!isLoading && searchResults.length > 0) {
+          @for (item of searchResults; track item.productId) {
+          <div (mousedown)="navigateToProduct(item.slug); showMobileSearch = false"
+            class="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer">
+            <img [src]="item.mainImage || 'assets/no-image.png'" class="w-8 h-8 object-cover rounded" />
+            <div class="leading-tight">
+              <span class="text-sm text-gray-800 font-medium line-clamp-1">{{ item.name }}</span>
+              <span class="text-xs text-[#3AA7E9]  font-semibold">{{ item.price | number }}đ</span>
+            </div>
+          </div>
+          }
+          }
+          @if (!isLoading && searchResults.length === 0) {
+          <div class="p-4 text-center text-sm text-gray-500">
+            Không tìm thấy sản phẩm
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    @if (mobileMenuOpen) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" (click)="mobileMenuOpen = false"></div>
+    }
+
+    <div
+      class="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-xl z-50 transform transition-transform duration-300 lg:hidden"
+      [class]="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'">
+      <div class="p-4 border-b">
+        <div class="flex items-center justify-between">
+          <span class="text-lg font-bold">Menu</span>
+          <button (click)="mobileMenuOpen = false">
+            <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-4 overflow-y-auto h-[calc(100vh-120px)]">
+        <div class="space-y-2">
+          <h4 class="font-semibold text-gray-800 mb-2">Danh mục sản phẩm</h4>
+          @for (cate of type; track cate.slug) {
+          <div (click)="goToType(cate.slug); mobileMenuOpen = false"
+            class="flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+            <div class="flex items-center gap-2">
+              <lucide-icon name="list" class="w-4 h-4 text-[#3AA7E9] "></lucide-icon>
+              <span class="text-sm font-medium">{{ cate.name }}({{cate.total}})</span>
+            </div>
+            <lucide-icon name="chevron-right" class="w-4 h-4 text-gray-400"></lucide-icon>
+          </div>
+          }
+        </div>
+
+        <nav class="space-y-2 pt-4 border-t">
+          <a routerLink="/about-us" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+            (click)="mobileMenuOpen = false">
+            Giới thiệu
+          </a>
+          <a routerLink="/my-service" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+            (click)="mobileMenuOpen = false">
+            Dịch vụ
+          </a>
+          <a routerLink="/policy" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+            (click)="mobileMenuOpen = false">
+            Chính sách
+          </a>
+        </nav>
+
+        <div class="pt-4 border-t">
+          <h4 class="font-semibold text-gray-800 mb-3">Thương hiệu</h4>
+          <div class="grid grid-cols-3 gap-3">
+            @for (brand of brands; track brand.id) {
+            <div class="flex justify-center cursor-pointer p-2 hover:bg-gray-50 rounded"
+              (click)="navigateToBrand(brand); mobileMenuOpen = false">
+              <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name"
+                class="h-8 object-contain" />
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="hidden lg:flex items-center gap-5 text-sm font-medium whitespace-nowrap">
+      <a routerLink="/about-us" routerLinkActive="active-tab" class="menu-tab">Giới thiệu</a>
+      <a routerLink="/my-service" routerLinkActive="active-tab" class="menu-tab">Dịch vụ</a>
+      <a routerLink="/policy" routerLinkActive="active-tab" class="menu-tab">Chính sách</a>
+    </nav>
+
+    <div class="hidden lg:flex items-center gap-4 flex-shrink-0">
+      <div class="relative w-[250px]">
+        <div class="bg-white rounded-full border-2 border-[#3AA7E9] overflow-hidden flex">
+          <input type="text" placeholder="Tìm kiếm..." (input)="onSearchInput($event)" [(ngModel)]="searchText"
+            class="flex-1 px-3 py-2 text-sm text-black outline-none" />
+          <button class="px-3">
+            <lucide-icon name="search" class="w-4 h-4 text-black/70"></lucide-icon>
+          </button>
+        </div>
+
+        @if (showResults && searchText !=='') {
+        <div
+          class="absolute top-full left-0 w-full bg-white z-[9999] border border-gray-200 shadow-lg rounded-lg mt-1 max-h-[300px] overflow-y-auto">
+
+          @if (isLoading) {
+          <div class="p-4 text-center text-sm text-gray-600">
+            <span
+              class="w-4 h-4 border-2 border-[#3AA7E9] border-t-transparent rounded-full animate-spin inline-block"></span>
+            Đang tìm kiếm...
+          </div>
+          }
+
+          @if (!isLoading && searchResults.length > 0) {
+          @for (item of searchResults; track item.productId) {
+          <div (mousedown)="navigateToProduct(item.slug)"
+            class="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer">
+            <img [src]="item.mainImage || 'assets/no-image.png'" class="w-8 h-8 object-cover rounded" />
+            <div class="leading-tight">
+              <span class="text-sm text-gray-800 font-medium line-clamp-1">{{ item.name }}</span>
+              <span class="text-xs text-[#3AA7E9]  font-semibold">{{ item.price | number }}đ</span>
+            </div>
+          </div>
+          }
+          }
+          @if (!isLoading && searchResults.length === 0) {
+          <div class="p-4 text-center text-sm text-gray-500">
+            Không tìm thấy sản phẩm
+          </div>
+          }
+        </div>
+        }
+      </div>
+      <div class="relative" #cartDropdown (click)="toggleCartDropdown($event)">
+        <button class="relative flex items-center gap-1 hover:text-[#3AA7E9]  whitespace-nowrap">
+          <span>Giỏ hàng</span>
+          <lucide-icon name="shopping-cart" class="w-5 h-5"></lucide-icon>
+
+          @if (cartCount > 0) {
+          <span class="absolute -top-2 -right-2 bg-[#3AA7E9] text-white text-xs px-1 rounded-full">
+            {{ cartCount }}
+          </span>
+          }
+        </button>
+
+        @if (showCartDropdown) {
+        <div
+          class="absolute -right-32 top-full mt-3 w-[500px] bg-white rounded-lg shadow-xl border border-gray-100 z-50"
+          (click)="$event.stopPropagation()">
+
+          @if (cartItems.length > 0) {
+          <div class="max-h-[300px] overflow-y-auto divide-y divide-gray-100">
+            @for (item of cartItems; track item.name) {
+            <div class="flex items-center gap-3 p-3">
+              <img [src]="item.mainImageUrl" alt="{{ item.name }}"
+                class="w-14 h-14 object-cover rounded-md border shrink-0" />
+              <div class="flex-1 flex justify-between gap-2 min-h-[56px]">
+                <div class="font-medium text-gray-800 w-[65%] line-clamp-2">
+                  {{ item.name }}
+                </div>
+                <div class="text-sm text-gray-800 w-[35%] flex justify-between text-right">
+                  <span class="text-gray-600 ml-1">x {{ item.quantity }}</span>
+                  <span class="font-semibold text-[#3AA7E9] ">{{ item.salePrice | number }}đ</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="flex justify-between items-center gap-3 p-3 border-t">
+            <button (click)="navigateTo('/cart'); $event.stopPropagation()"
+              class="flex-1 border border-[#3AA7E9] text-[#3AA7E9]  py-2 rounded-md font-medium hover:bg-[#fff5eb]">
+              Xem chi tiết
+            </button>
+
+            <button (click)="navigateTo('/checkout'); $event.stopPropagation()"
+              class="flex-1 bg-[#3AA7E9] text-white py-2 rounded-md font-medium hover:bg-[#00456F]">
+              Đặt hàng
+            </button>
+          </div>
+
+          } @else {
+          <div class="p-6 text-center text-gray-500">
+            🛒 Hiện tại chưa có sản phẩm nào trong giỏ hàng
+          </div>
+          }
+        </div>
+        }
+      </div>
+      <button (click)="login()" class="flex items-center gap-1 hover:text-[#3AA7E9]  whitespace-nowrap">
+        <span>Đăng nhập</span>
+        <lucide-icon name="user" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</header> -->
+
+
+
+<div class="bg-[#00456F] backdrop-blur-sm fixed top-0 left-0 w-full z-50">
+  <div class="max-w-7xl mx-auto text-white text-xs md:text-sm py-1 text-center md:text-right md:pr-4 lg:pr-10">
+    HOTLINE:
+    <span class="font-semibold">0243.873.1640 - 033.892.2892</span>
+  </div>
+</div>
+
+<header class="shadow-md fixed top-[24px] left-0 w-full z-40 backdrop-blur-sm transition-all duration-300"
+  [ngClass]="'bg-white text-black'">
+  <div class="max-w-[1280px] mx-auto flex items-center justify-between gap-4 py-4 px-4 lg:px-6">
+
+    <!-- Mobile menu button (left) -->
+    <button class="lg:hidden" (click)="toggleMobileMenu()">
+      <lucide-icon [name]="mobileMenuOpen ? 'x' : 'menu'" class="w-6 h-6"></lucide-icon>
+    </button>
+
+    <!-- Logo (center on mobile) -->
+    <a routerLink="/"
+      class="text-lg md:text-xl font-bold tracking-wide whitespace-nowrap lg:flex-shrink-0 mx-auto lg:mx-0">
+      <img src="assets/LogoNTN.png" alt="" class="w-[52px] h-[52px]">
+    </a>
+
+    <!-- Right side icons (mobile) -->
+    <div class="flex items-center gap-3 lg:hidden">
+      <!-- Search icon -->
+      <button (click)="toggleMobileSearch()" class="relative">
+        <lucide-icon name="search" class="w-5 h-5 block align-middle"></lucide-icon>
+      </button>
+
+      <!-- Cart for mobile -->
+      <div class="relative">
+        <button (click)="toggleMobileCart()" class="relative">
+          <lucide-icon name="shopping-cart" class="w-5 h-5 block align-middle"></lucide-icon>
+          @if (cartCount > 0) {
+          <span class="absolute -top-2 -right-2 bg-[#3AA7E9] text-white text-xs px-1 rounded-full">
+            {{ cartCount }}
+          </span>
+          }
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop content -->
+    <div class="hidden lg:flex items-center gap-4 flex-shrink min-w-[200px]">
+      <div class="relative group">
+        <button class="flex items-center gap-2 border border-[#3AA7E9]  font-medium px-4 py-2 rounded-full transition">
+          <lucide-icon name="menu" class="w-4 h-4"></lucide-icon>
+          Danh mục
+          <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
+        </button>
+        <div class="absolute left-0 top-full w-full h-5 bg-transparent hidden group-hover:block"></div>
+        <div
+          class="absolute left-0 top-[calc(100%+20px)] hidden group-hover:flex bg-white shadow-lg rounded-lg overflow-hidden z-50 w-[900px] p-6 gap-6 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+
+          <div class="w-1/4 border-r pr-4 space-y-2">
+            @for (cate of type; track cate.slug) {
+            <div (mouseenter)="onTypeHover(cate.slug)" (click)="goToType(cate.slug)"
+              class="flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+              <div class="flex items-center gap-2">
+                <lucide-icon name="list" class="w-4 h-4 text-[#3AA7E9] "></lucide-icon>
+                <span class="text-sm font-medium">{{ cate.name }}({{cate.total}})</span>
+              </div>
+              <lucide-icon name="chevron-right" class="w-4 h-4 text-gray-400"></lucide-icon>
+            </div>
+            }
+          </div>
+
+          <div class="flex-1 flex flex-col gap-6">
+            <div>
+              <h4 class="font-semibold mb-3 text-gray-800">Theo sản phẩm</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (item of activeType?.categories; track item.name) {
+                <div [routerLink]="['/list-product', activeType.slug, item.slug]"
+                  class="border border-gray-200 px-3 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-gray-50 cursor-pointer">
+                  <img [src]="item.img" class="w-5 h-5" />
+                  <span class="text-black font-semibold text-[14px]">{{ item.name }}</span>
+                </div>
+                }
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Theo thương hiệu</h4>
+                <div class="grid grid-cols-3 gap-6 items-center justify-items-center opacity-90">
+                  @for (brand of brands; track brand.id) {
+                  <div class="block w-full flex justify-center cursor-pointer" (click)="navigateToBrand(brand)">
+                    <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name"
+                      [title]="brand.name"
+                      class="h-10 object-contain transition-transform duration-300 hover:scale-110" />
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-semibold mb-3 text-gray-800">Sản phẩm nổi bật</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  @for (p of featuredProducts; track p.name) {
+                  <div [routerLink]="['/detail-product', p.slug]" [queryParams]="{ data:p?.category}"
+                    class="flex flex-col items-center border border-gray-200 rounded-md p-2 hover:bg-gray-50 cursor-pointer">
+                    <img [src]="p.mainImageUrl" class="w-8 h-8 mb-1" />
+                    <span class="text-xs font-medium text-gray-700 text-center">{{ p.name }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop navigation -->
+    <nav class="hidden lg:flex items-center gap-5 text-sm font-medium whitespace-nowrap">
+      <a routerLink="/about-us" routerLinkActive="active-tab" class="menu-tab">Giới thiệu</a>
+      <a routerLink="/service" routerLinkActive="active-tab" class="menu-tab">Dịch vụ</a>
+      <a routerLink="/policy" routerLinkActive="active-tab" class="menu-tab">Chính sách</a>
+      <a routerLink="/my-service" routerLinkActive="active-tab" class="menu-tab">Chi phí lắp đặt</a>
+
+    </nav>
+
+    <!-- Desktop Search, cart, login -->
+    <div class="hidden lg:flex items-center gap-4 flex-shrink-0">
+      <div class="relative  " #searchContainer>
+        <div class="bg-white rounded-full border border-[#3AA7E9] overflow-hidden flex">
+          <input type="text" placeholder="Tìm kiếm..." (input)="onSearchInput($event)" [(ngModel)]="searchText"
+            class="flex-1 px-3 w-[250px] py-2 text-sm text-black outline-none" />
+          <button class="px-3">
+            <lucide-icon name="search" class="w-4 h-4 text-black/70"></lucide-icon>
+          </button>
+        </div>
+
+        @if (showResults && searchText !=='') {
+        <div
+          class="absolute top-full left-0 bg-white z-[9999] w-[450px] border border-gray-200 shadow-lg rounded-lg mt-1 max-h-[300px] overflow-y-auto">
+
+          @if (isLoading) {
+          <div class="p-4 text-center text-sm text-gray-600">
+            <span
+              class="w-4 h-4 border border-[#3AA7E9] border-t-transparent rounded-full animate-spin inline-block"></span>
+            Đang tìm kiếm...
+          </div>
+          }
+
+          @if (!isLoading && searchResults.length > 0) {
+          @for (item of searchResults; track item.productId) {
+          <div (mousedown)="navigateToProduct(item)"
+            class="flex items-center  gap-2 p-2 hover:bg-gray-100 cursor-pointer">
+            <img [src]="item.mainImage || 'assets/no-image.png'" class="w-8 h-8 object-cover rounded" />
+            <div class="leading-tight">
+              <span class="text-sm text-gray-800 font-medium line-clamp-1">{{ item.name }}</span>
+              <div class="flex flex-col">
+                <!-- Giá bán -->
+                <p class="text-xs text-[#3AA7E9] font-semibold">
+                  {{ item.salePrice && item.salePrice > 0
+                  ? (item.salePrice | number:'1.0-0':'vi')
+                  : (item.price | number:'1.0-0':'vi') }}đ
+                </p>
+
+                <!-- Giá gốc (gạch) -->
+                <p *ngIf="item.salePrice && item.salePrice > 0" class="text-[11px] text-gray-400 line-through">
+                  {{ item.price | number:'1.0-0':'vi' }}đ
+                </p>
+              </div>
+
+            </div>
+          </div>
+          }
+          }
+          @if (!isLoading && searchResults.length === 0) {
+          <div class="p-4 text-center text-sm text-gray-500">
+            Không tìm thấy sản phẩm
+          </div>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Desktop Cart -->
+      <div class="relative" #cartDropdown (click)="toggleCartDropdown($event)">
+        <button class="relative flex items-center gap-1 hover:text-[#3AA7E9]  whitespace-nowrap">
+          <span>Giỏ hàng</span>
+          <lucide-icon name="shopping-cart" class="w-5 h-5"></lucide-icon>
+
+          @if (cartCount > 0) {
+          <span class="absolute -top-2 -right-2 bg-[#3AA7E9] text-white text-xs px-1 rounded-full">
+            {{ cartCount }}
+          </span>
+          }
+        </button>
+
+        @if (showCartDropdown) {
+        @if (cartItems.length > 0) {
+        <div
+          class="absolute -right-32 top-full mt-3 w-[500px] bg-white rounded-lg shadow-xl border border-gray-100 z-50"
+          (click)="$event.stopPropagation()">
+
+          <div class="max-h-[300px] overflow-y-auto divide-y divide-gray-100">
+            @for (item of cartItems; track item.name) {
+            <div class="flex items-center gap-3 p-3">
+              <img [src]="item.mainImageUrl" alt="{{ item.name }}"
+                class="w-14 h-14 object-cover rounded-md border shrink-0" />
+              <div class="flex-1 flex justify-between gap-2 min-h-[56px]">
+                <div class="font-medium text-gray-800 w-[65%] line-clamp-2">
+                  {{ item.name }}
+                </div>
+                <div class="text-sm text-gray-800 w-[35%] flex justify-between text-right">
+                  <span class="text-gray-600 ml-1">x {{ item.quantity }}</span>
+                  <span class="font-semibold text-[#3AA7E9] ">{{ item.salePrice | number:'1.0-0':'vi' }}đ</span>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+
+          <div class="flex justify-between items-center gap-3 p-3 border-t">
+            <button (click)="navigateTo('/cart'); $event.stopPropagation()"
+              class="flex-1 border border-[#3AA7E9] text-[#3AA7E9]  py-2 rounded-md font-medium hover:bg-[#fff5eb]">
+              Xem chi tiết
+            </button>
+
+            <button (click)="navigateTo('/checkout'); $event.stopPropagation()"
+              class="flex-1 bg-[#3AA7E9] text-white py-2 rounded-md font-medium hover:bg-[#00456F]">
+              Đặt hàng
+            </button>
+          </div>
+
+        </div>
+        }
+        @else {
+        <div
+          class="absolute -right-32 top-full mt-3 w-[260px] bg-white rounded-lg shadow-xl border border-gray-100 z-50"
+          (click)="$event.stopPropagation()">
+          <div class="p-4 text-center text-gray-500">
+            🛒 Hiện tại chưa có sản phẩm nào trong giỏ hàng
+          </div>
+        </div>
+        }
+        }
+
+      </div>
+
+      <!-- Desktop Login -->
+      <button (click)="login()" class="flex items-center gap-1 hover:text-[#3AA7E9]  whitespace-nowrap">
+        <span>Đăng nhập</span>
+        <lucide-icon name="user" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Overlays (outside header for better z-index control) -->
+
+<!-- Mobile cart overlay -->
+@if (showMobileCart) {
+<div class="fixed inset-0 bg-black/50 z-[60] lg:hidden" (click)="showMobileCart = false">
+  <div
+    class="absolute top-20 right-4 left-4 max-w-md mx-auto bg-white rounded-lg shadow-xl border border-gray-100 z-[70] animate-slide-down"
+    (click)="$event.stopPropagation()">
+    <div class="p-3 border-b flex justify-between items-center">
+      <h3 class="font-semibold text-gray-800 text-lg">Giỏ hàng của bạn</h3>
+      <button (click)="showMobileCart = false" class="text-gray-600 hover:text-gray-800 transition-colors">
+        <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+
+    @if (cartItems.length > 0) {
+    <div class="max-h-[60vh] overflow-y-auto divide-y divide-gray-100">
+      @for (item of cartItems; track item.name) {
+      <div class="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
+        <img [src]="item.mainImageUrl" alt="{{ item.name }}"
+          class="w-12 h-12 object-cover rounded-md border shrink-0" />
+        <div class="flex-1 flex justify-between gap-2">
+          <div class="font-medium text-gray-800 w-[60%] line-clamp-2 text-sm">
+            {{ item.name }}
+          </div>
+          <div class="text-sm text-gray-800 w-[40%] flex flex-col items-end">
+            <span class="text-gray-600 text-xs">x {{ item.quantity }}</span>
+            <span class="font-semibold text-[#3AA7E9]  mt-1">{{ item.salePrice | number:'1.0-0':'vi'}}đ</span>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="flex justify-between items-center gap-3 p-4 border-t">
+      <button (click)="navigateTo('/cart'); showMobileCart = false; $event.stopPropagation()"
+        class="flex-1 border border-[#3AA7E9] text-[#3AA7E9]  py-3 rounded-md font-medium hover:bg-[#fff5eb] transition-colors text-sm">
+        Xem chi tiết
+      </button>
+      <button (click)="navigateTo('/checkout'); showMobileCart = false; $event.stopPropagation()"
+        class="flex-1 bg-[#3AA7E9] text-white py-3 rounded-md font-medium hover:bg-[#00456F] transition-colors text-sm">
+        Đặt hàng
+      </button>
+    </div>
+    } @else {
+    <div class="p-8 text-center text-gray-500">
+      <div class="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+        <lucide-icon name="shopping-cart" class="w-6 h-6 text-gray-400"></lucide-icon>
+      </div>
+      <p class="text-sm">Hiện tại chưa có sản phẩm nào trong giỏ hàng</p>
+    </div>
+    }
+  </div>
+</div>
+}
+
+<!-- Mobile search overlay -->
+@if (showMobileSearch) {
+<div class="fixed inset-0 bg-black/50 z-[60] lg:hidden" (click)="showMobileSearch = false">
+  <div class="absolute top-0 left-0 right-0 bg-white z-[70]" (click)="$event.stopPropagation()">
+    <div class="p-4">
+      <div class="flex items-center gap-2">
+        <div class="flex-1 bg-white rounded-full border border-[#3AA7E9] overflow-hidden flex">
+          <input type="text" placeholder="Tìm kiếm sản phẩm..." (input)="onSearchInput($event)" [(ngModel)]="searchText"
+            class="flex-1 px-4 py-3 text-sm text-black outline-none w-full" autofocus />
+          <button class="px-4">
+            <lucide-icon name="search" class="w-4 h-4 text-black/70"></lucide-icon>
+          </button>
+        </div>
+        <button (click)="showMobileSearch = false" class="text-gray-600 hover:text-gray-800 transition-colors p-2">
+          <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
+        </button>
+      </div>
+      <!-- Search results for mobile -->
+      @if (showResults && searchText !=='') {
+      <div
+        class="absolute left-0 right-0 top-full bg-white z-[9999] border border-gray-200 shadow-lg rounded-lg mt-1 max-h-[50vh] overflow-y-auto">
+        @if (isLoading) {
+        <div class="p-6 text-center text-sm text-gray-600">
+          <span
+            class="w-5 h-5 border border-[#3AA7E9] border-t-transparent rounded-full animate-spin inline-block"></span>
+          <p class="mt-2">Đang tìm kiếm...</p>
+        </div>
+        }
+
+        @if (!isLoading && searchResults.length > 0) {
+        <div class="divide-y divide-gray-100">
+          @for (item of searchResults; track item.productId) {
+          <div (mousedown)="navigateToProduct(item); showMobileSearch = false"
+            class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer transition-colors">
+            <img [src]="item.mainImage || 'assets/no-image.png'" class="w-10 h-10 object-cover rounded border" />
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-800 font-medium line-clamp-1 mb-1">{{ item.name }}</p>
+              <div class="flex flex-col">
+                <!-- Giá bán -->
+                <p class="text-xs text-[#3AA7E9] font-semibold">
+                  {{ item.salePrice && item.salePrice > 0
+                  ? (item.salePrice | number:'1.0-0':'vi')
+                  : (item.price | number:'1.0-0':'vi') }}đ
+                </p>
+
+                <!-- Giá gốc (gạch) -->
+                <p *ngIf="item.salePrice && item.salePrice > 0" class="text-[11px] text-gray-400 line-through">
+                  {{ item.price | number:'1.0-0':'vi' }}đ
+                </p>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        }
+        @if (!isLoading && searchResults.length === 0) {
+        <div class="p-6 text-center text-gray-500">
+          <lucide-icon name="search-x" class="w-8 h-8 mx-auto text-gray-400 mb-2"></lucide-icon>
+          <p class="text-sm">Không tìm thấy sản phẩm</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}
+
+<!-- Mobile menu overlay - GIỮ NGUYÊN LOGIC CŨ -->
+@if (mobileMenuOpen) {
+<div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" (click)="mobileMenuOpen = false"></div>
+}
+
+<!-- Mobile menu content - GIỮ NGUYÊN LOGIC CŨ -->
+<div
+  class="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-xl z-50 transform transition-transform duration-300 lg:hidden"
+  [class]="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'">
+  <div class="p-4 border-b">
+    <div class="flex items-center justify-between">
+      <span class="text-lg font-bold"><img src="assets/LogoNTN.png" alt="" class="w-[52px] h-[52px]"></span>
+      <button (click)="mobileMenuOpen = false">
+        <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="p-4 space-y-4 overflow-y-auto h-[calc(100vh-120px)]">
+    <!-- Mobile danh mục -->
+    <div class="space-y-2">
+      <h4 class="font-semibold text-gray-800 mb-2">Danh mục sản phẩm</h4>
+      @for (cate of type; track cate.slug) {
+      <div (click)="goToType(cate.slug); mobileMenuOpen = false"
+        class="flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+        <div class="flex items-center gap-2">
+          <lucide-icon name="list" class="w-4 h-4 text-[#3AA7E9] "></lucide-icon>
+          <span class="text-sm font-medium">{{ cate.name }}({{cate.total}})</span>
+        </div>
+        <lucide-icon name="chevron-right" class="w-4 h-4 text-gray-400"></lucide-icon>
+      </div>
+      }
+    </div>
+
+    <!-- Mobile navigation -->
+
+
+    <!-- Mobile brands -->
+    <div class="pt-4 border-t">
+      <h4 class="font-semibold text-gray-800 mb-3">Thương hiệu</h4>
+      <div class="grid grid-cols-3 gap-3">
+        @for (brand of brands; track brand.id) {
+        <div class="flex justify-center cursor-pointer p-2 hover:bg-gray-50 rounded"
+          (click)="navigateToBrand(brand); mobileMenuOpen = false">
+          <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name"
+            class="h-8 object-contain" />
+        </div>
+        }
+      </div>
+    </div>
+    <nav class="space-y-2 pt-4 border-t">
+      <a routerLink="/about-us" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+        (click)="mobileMenuOpen = false">
+        Giới thiệu
+      </a>
+      <a routerLink="/service" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+        (click)="mobileMenuOpen = false">
+        Dịch vụ
+      </a>
+      <a routerLink="/policy" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+        (click)="mobileMenuOpen = false">
+        Chính sách
+      </a>
+      <a routerLink="/my-service" routerLinkActive="active-tab" class="block px-3 py-2 hover:bg-gray-100 rounded-md"
+        (click)="mobileMenuOpen = false">
+        Chi phí lắp đặt
+      </a>
+    </nav>
+
+    <!-- Mobile login -->
+    <!-- <div class="pt-4 border-t">
+      <button (click)="login(); mobileMenuOpen = false"
+        class="w-full flex items-center justify-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md">
+        <lucide-icon name="user" class="w-4 h-4"></lucide-icon>
+        <span class="text-sm font-medium">Đăng nhập</span>
+      </button>
+    </div> -->
+  </div>
+</div>
+
+<!-- Add CSS animation -->
+<style>
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+</style>

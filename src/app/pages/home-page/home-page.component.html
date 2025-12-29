@@ -1,0 +1,394 @@
+<div class="grid grid-cols-12 gap-4">
+  <!-- Banner -->
+  <div class="col-span-12 relative overflow-hidden
+           h-[260px] sm:h-[300px] md:h-[420px] lg:h-[560px]" (mouseenter)="pauseSlide()" (mouseleave)="resumeSlide()"
+    (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+    @for (img of banners; let i = $index; track i) {
+
+    <!-- Background blur (desktop only) -->
+    <img [src]="img.mainImage" class="absolute inset-0 w-full h-full
+               object-cover blur-2xl scale-110 opacity-40
+               hidden md:block" />
+
+    <!-- Main image -->
+    <img [src]="img.mainImage" class="absolute inset-0 w-full h-full
+               object-cover object-center
+               transition-opacity duration-700" [ngClass]="{
+          'opacity-100 z-10': currentIndex === i,
+          'opacity-0 z-0': currentIndex !== i
+        }" />
+    }
+
+    <!-- Prev (desktop only) -->
+    <button *ngIf="isHovering" (click)="prev()" class="hidden md:flex absolute top-1/2 left-6 -translate-y-1/2
+             w-12 h-12 rounded-full
+             bg-black/30 text-white
+             items-center justify-center
+             hover:bg-black/40
+             transition shadow-lg backdrop-blur-sm z-20">
+      <lucide-icon name="chevrons-left" class="w-7 h-7"></lucide-icon>
+    </button>
+
+    <!-- Next (desktop only) -->
+    <button *ngIf="isHovering" (click)="next()" class="hidden md:flex absolute top-1/2 right-6 -translate-y-1/2
+             w-12 h-12 rounded-full
+             bg-black/30 text-white
+             items-center justify-center
+             hover:bg-black/40
+             transition shadow-lg backdrop-blur-sm z-20">
+      <lucide-icon name="chevrons-right" class="w-7 h-7"></lucide-icon>
+    </button>
+
+    <!-- Dots (desktop only) -->
+    <div class="hidden md:flex absolute bottom-4 left-1/2
+             -translate-x-1/2 gap-2 z-20">
+      @for (img of banners; let i = $index; track i) {
+      <span (click)="goTo(i)" class="w-3 h-3 rounded-full cursor-pointer
+                 transition-all duration-300" [ngClass]="
+            currentIndex === i
+              ? 'bg-white scale-110'
+              : 'bg-white/50 hover:bg-white'
+          ">
+      </span>
+      }
+    </div>
+
+  </div>
+</div>
+
+
+<!-- 🧡 DỊCH VỤ CHUYÊN NGHIỆP -->
+<section class="container-app my-16">
+  <div class="flex flex-col lg:flex-row items-center lg:items-start gap-10 lg:gap-16 p-8">
+
+    <!-- BOX 1: Ảnh + Layer -->
+    <div class="relative w-full lg:w-1/2 flex justify-center">
+
+      <div class="absolute -top-16 -left-8 w-80 h-[100%] bg-[#F7F7F7] rounded-2xl -z-10"></div>
+
+      <div class="absolute bottom-[58px] left-[40px] w-[98%] h-48 bg-[#F7F7F7] rounded-xl -z-10"></div>
+
+      <img [src]="'assets/chuyennghiep.jpg'" alt="Dịch vụ chuyên nghiệp"
+        class="relative rounded-xl shadow-lg w-full h-[320px] object-cover z-20" />
+    </div>
+
+    <!-- BOX 2: Nội dung -->
+    <div class="flex flex-col w-full lg:w-1/2 space-y-4 pt-6 lg:pt-2">
+      <p class="uppercase text-[#3AA7E9]  font-semibold tracking-wide">
+        ĐỀ CAO
+      </p>
+
+      <h2 class="text-3xl font-bold text-gray-900 leading-tight">
+        Dịch Vụ Chuyên Nghiệp
+      </h2>
+
+      <p class="text-gray-600 leading-relaxed">
+        Với hơn <span class="font-bold text-gray-800">10 năm kinh nghiệm</span>
+        trong lĩnh vực thiết bị gia dụng, chúng tôi cam kết mang đến sản phẩm chính hãng –
+        <span class="font-semibold text-gray-800">đổi trả trong 7 ngày</span> – dịch vụ
+        lắp đặt chuyên nghiệp. Hơn 5.000 khách hàng đã tin dùng và
+        <span class="font-bold text-gray-800">đánh giá 5★</span>.
+      </p>
+
+      <button routerLink="/my-service"
+        class="bg-[#3AA7E9] hover:bg-[#00456F] text-white px-6 py-3 rounded-md font-semibold flex items-center gap-2 w-fit transition">
+        Xem chi tiết ››
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ✅ Icon dịch vụ bên dưới -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-10 text-center mt-16">
+    <div>
+      <lucide-icon name="truck" class="w-12 h-12 mb-3 text-[#3AA7E9] mx-auto"></lucide-icon>
+      <h4 class="font-bold text-gray-900">Giao hàng</h4>
+      <p class="text-gray-500 text-sm font-[400]">Giao hàng nhanh chóng</p>
+    </div>
+
+    <div>
+      <lucide-icon name="check-circle-2" class="w-12 h-12 mb-3 text-[#3AA7E9] mx-auto"></lucide-icon>
+      <h4 class="font-bold text-gray-900">Chính hãng</h4>
+      <p class="text-gray-500 text-sm">Bảo hành chính hãng</p>
+    </div>
+
+    <div>
+      <lucide-icon name="wrench" class="w-12 h-12 mb-3 text-[#3AA7E9] mx-auto"></lucide-icon>
+      <h4 class="font-bold text-gray-900">Lắp đặt</h4>
+      <p class="text-gray-500 text-sm">Hỗ trợ lắp đặt tận nơi</p>
+    </div>
+
+    <div>
+      <lucide-icon name="badge-dollar-sign" class="w-12 h-12 mb-3 text-[#3AA7E9] mx-auto"></lucide-icon>
+      <h4 class="font-bold text-gray-900">Giá thành</h4>
+      <p class="text-gray-500 text-sm">Giá tốt - nhiều ưu đãi theo mùa</p>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- SECTION: THIẾT BỊ VỆ SINH -->
+<section class="container-app my-20">
+  @for (item of loaiSanPham; track item.name) {
+  <div class="flex items-center mb-4 gap-3">
+    <h2 class="text-2xl font-bold text-gray-900 m-0">
+      {{item.name}}
+    </h2>
+    <!-- Gạch dọc -->
+    <div class="h-5 w-[1px] bg-gray-300"></div>
+    <a [routerLink]="['/list-product', item.slug]"
+      class="flex items-center gap-1 text-sm m-0 text-gray-500 hover:text-orange-600">
+      Xem tất cả <span class="text-lg">››</span>
+    </a>
+  </div>
+  <div class="flex flex-col gap-4 w-full">
+    @for (row of normalizeCategories(item); track $index) {
+    <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))] justify-items-center" [ngClass]="{
+        'grid-cols-2 sm:grid-cols-3 md:grid-cols-5 justify-items-center': item.slug === 'thiet_bi_ve_sinh' && $index === 1,
+        'grid-cols-3 sm:grid-cols-4 md:grid-cols-6': !(item.slug === 'thiet_bi_ve_sinh' && $index === 1)
+      }">
+      @for (cate of row; track $index) {
+      <div *ngIf="cate" [routerLink]="['/list-product', item.slug, cate.slug]" class="bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition text-center p-3 cursor-pointer
+                    flex flex-col items-center group border border-gray-200 w-full">
+
+        <img [src]="cate.img" [alt]="cate.name"
+          class="w-full h-[180px] object-contain mb-2 group-hover:scale-105 transition" />
+
+        <p class="font-semibold text-xs py-2 md:text-sm text-gray-800 uppercase">
+          {{ cate.name }}
+        </p>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  <!-- ✅ Logo Partners trượt riêng cho từng loại -->
+  <div class="
+  relative
+  w-full md:w-[68%]
+  mt-4 mb-6
+  mx-auto
+  opacity-80
+">
+
+    <!-- NÚT TRÁI -->
+    <button *ngIf="partners.length > 6" (click)="prevBrandSlide(item)" class="
+      hidden md:flex md:align-middle
+      absolute left-0 top-1/2 -translate-y-1/2
+      z-20
+      h-10 w-10
+      items-center justify-center
+      text-2xl
+      rounded-full
+    ">
+      ‹‹
+    </button>
+
+    <!-- DẢI LOGO (TRUNG TÂM) -->
+    <div class="
+    flex items-center
+    gap-4 md:gap-6
+    overflow-x-auto md:overflow-hidden
+    whitespace-nowrap
+    w-full
+    px-12 md:px-16
+  ">
+      <ng-container *ngFor="let brand of partners.slice(item.slideIndexBrand, item.slideIndexBrand + 6)">
+        <div [routerLink]="['/list-product', item.slug]" [queryParams]="{ brandId: brand.id }"
+          class="shrink-0 cursor-pointer">
+          <img [src]="brand.img || brand.image || 'assets/no-image.svg'" [alt]="brand.name" [title]="brand.name" class="
+            h-14 md:h-18
+            w-[80px] md:w-[100px]
+            object-contain
+            transition-transform duration-300
+            hover:scale-110
+          " />
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- NÚT PHẢI -->
+    <button *ngIf="partners.length > 6" (click)="nextBrandSlide(item)" class="
+      hidden md:flex
+      absolute right-0 top-1/2 -translate-y-1/2
+      z-20
+      h-10 w-10
+      items-center justify-center
+      text-2xl
+      rounded-full
+    ">
+      ››
+    </button>
+
+  </div>
+
+
+  }
+  <!-- SECTION: SẢN PHẨM ĐÃ XEM -->
+  <section class="container-app my-16 " *ngIf="sanPhamDaXem.length">
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 uppercase">SẢN PHẨM ĐÃ XEM</h2>
+      <div class="h-5 w-[1px] bg-gray-300"></div>
+
+      <a [routerLink]="['/viewed-products']"
+        class="flex items-center gap-1 text-sm m-0 text-gray-500 hover:text-orange-600">
+        Xem tất cả <span class="text-lg">››</span>
+      </a>
+    </div>
+    <!-- Slider wrapper -->
+    <!-- <div class="relative">
+      @if (sanPhamDaXem.length > 4) {
+      <button (click)="prevSlide()" class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-500 hover:bg-gray-600 text-white
+           rounded-r-full p-3 shadow-md z-10 flex items-center justify-center">
+        <span class="text-lg">«</span>
+      </button>
+      }
+      <div class="overflow-hidden w-full">
+        <div class="flex transition-transform duration-500 ease-in-out"
+          [style.transform]="'translateX(-' + translateX + 'px)'" [style.width.px]="sanPhamDaXem.length * itemWidth">
+          @for (product of sanPhamDaXem; track product.id) {
+          <div class="w-[296px] p-3 flex-shrink-0">
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-3 cursor-pointer"
+              (click)="goToDetail(product.slug)">
+              <div class="relative">
+                @if (product.isHot) {
+                <span class="absolute top-2 left-2 bg-orange-100 text-orange-600
+                           text-xs font-semibold px-2 py-1 rounded-full">
+                  BÁN CHẠY
+                </span>
+                }
+                <img [src]="product.image" [alt]="product.name" class="w-full h-[160px] object-contain" />
+              </div>
+
+              <div class="mt-3">
+                <h3 class="font-bold text-gray-800 text-sm">{{ product.brand }}</h3>
+                <p class="text-gray-500 text-sm line-clamp-2">
+                  {{ product.name }}
+                </p>
+
+                <div class="mt-1">
+                  <div class="flex items-center space-x-2">
+                    <p class="text-gray-400 line-through text-xs">
+                      {{ product.oldPrice | number:'1.0-0':'vi' }}đ
+                    </p>
+                    <span class="bg-red-50 text-red-500 text-[10px] font-semibold px-2 py-[2px] rounded-full">
+                      -{{ product.discount }}%
+                    </span>
+                  </div>
+                  <p class="text-red-500 font-bold text-sm mt-1">
+                    {{ product.price | number:'1.0-0':'vi' }}đ
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      @if (sanPhamDaXem.length > 4) {
+      <button (click)="nextSlide()" class="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-500 hover:bg-gray-600 text-white
+           rounded-l-full p-3 shadow-md z-10 flex items-center justify-center">
+        <span class="text-lg">»</span>
+      </button>
+      }
+    </div> -->
+    <div class="relative">
+
+      <!-- Nút trái (ẩn mobile) -->
+      @if (sanPhamDaXem.length > 4) {
+      <button (click)="prevSlide()" class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2
+           bg-gray-500 hover:bg-gray-600 text-white
+           rounded-r-full p-3 shadow-md z-10
+           items-center justify-center">
+        <span class="text-lg">«</span>
+      </button>
+      }
+
+      <!-- Container -->
+      <div class="w-full
+           overflow-x-auto md:overflow-hidden
+           scroll-smooth
+           snap-x snap-mandatory
+           scrollbar-hide">
+        <div class="flex items-stretch
+             transition-transform duration-500 ease-in-out
+             md:snap-none" [style.transform]="
+        'translateX(-' + translateX + 'px)'
+      " [style.width.px]="sanPhamDaXem.length * itemWidth">
+
+          @for (product of sanPhamDaXem; track product.id) {
+          <div class="w-[75vw] sm:w-[260px] md:w-[260px] lg:w-[296px]
+               p-3 flex-shrink-0 flex
+               snap-start">
+
+            <!-- CARD -->
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition
+                 p-3 cursor-pointer
+                 h-full w-full flex flex-col" (click)="goToDetail(product)">
+
+              <!-- IMAGE -->
+              <div class="relative">
+                @if (product.isHot) {
+                <span class="absolute top-2 left-2 bg-orange-100 text-orange-600
+                     text-xs font-semibold px-2 py-1 rounded-full">
+                  BÁN CHẠY
+                </span>
+                }
+
+                <img [src]="product.image" [alt]="product.name" class="w-full h-[140px] sm:h-[150px] md:h-[160px]
+                     object-contain" />
+              </div>
+
+              <!-- CONTENT -->
+              <div class="mt-3 flex flex-col flex-1">
+
+                <h3 class="font-bold text-gray-800 text-sm min-h-[20px]">
+                  {{ product.brand }}
+                </h3>
+
+                <p class="text-gray-500 text-sm line-clamp-2 min-h-[40px]">
+                  {{ product.name }}
+                </p>
+
+                <!-- PRICE -->
+                <div class="mt-auto">
+                  <div class="flex items-center space-x-2">
+                    <p class="text-gray-400 line-through text-xs">
+                      {{ product.oldPrice | number:'1.0-0':'vi' }}đ
+                    </p>
+                    <span *ngIf="product?.discount" class="bg-red-50 text-red-500 text-[10px]
+                         font-semibold px-2 py-[2px] rounded-full">
+                      -{{ product.discount }}%
+                    </span>
+                  </div>
+
+                  <p class="text-red-500 font-bold text-sm mt-1">
+                    {{ product.price | number:'1.0-0':'vi' }}đ
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          }
+
+        </div>
+      </div>
+
+      <!-- Nút phải (ẩn mobile) -->
+      @if (sanPhamDaXem.length > 4) {
+      <button (click)="nextSlide()" class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2
+           bg-gray-500 hover:bg-gray-600 text-white
+           rounded-l-full p-3 shadow-md z-10
+           items-center justify-center">
+        <span class="text-lg">»</span>
+      </button>
+      }
+
+    </div>
+
+
+  </section>

@@ -1,0 +1,69 @@
+<div class="flex flex-col select-none text-sm space-y-2">
+  <!-- Row trên: trái pageSize | phải total results -->
+  <div class="flex items-center justify-center gap-3">
+    <!-- Left: page size selector (nằm hẳn bên trái) -->
+
+    <!-- Right: total results (nằm cùng hàng, hẳn bên phải) -->
+    <span class="text-gray-600">Tìm thấy {{ totalItem }} kết quả</span>
+  </div>
+
+  <!-- Row dưới: pagination buttons (mặc định căn phải) -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-gray-600">Hiển thị</span>
+
+      <select class="h-8 rounded-md border border-gray-300 bg-white px-2 text-gray-700
+               focus:outline-none focus:ring-2 focus:ring-[#3AA7E9]/40" [ngModel]="pageSize"
+        (ngModelChange)="onPageSizeChange($event)">
+        <option *ngFor="let s of pageSizeOptions" [ngValue]="s">{{ s }}</option>
+      </select>
+
+      <span class="text-gray-600">/ trang</span>
+    </div>
+    <div class="flex items-center justify-center space-x-1">
+      <!-- First page -->
+      <button
+        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        (click)="goToPage(1)" [disabled]="pageNumber === 1">
+        «
+      </button>
+
+      <!-- Previous -->
+      <button
+        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        (click)="previousPage()" [disabled]="pageNumber === 1">
+        ‹
+      </button>
+
+      <span *ngIf="pagesToShow[0] > 2" class="px-1 text-gray-500">...</span>
+
+      <ng-container *ngFor="let page of pagesToShow">
+        <button class="w-8 h-8 flex items-center justify-center rounded-md border transition-all duration-150"
+          [ngClass]="{
+            'bg-[#3AA7E9] text-white border-[#3AA7E9] font-semibold': page === pageNumber,
+            'hover:bg-gray-100 border-gray-300 text-gray-700': page !== pageNumber
+          }" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      </ng-container>
+
+      <span *ngIf="pagesToShow[pagesToShow.length - 1] < totalPages - 1" class="px-1 text-gray-500">
+        ...
+      </span>
+
+      <!-- Last page -->
+      <button
+        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        (click)="goToPage(totalPages)" [disabled]="pageNumber === totalPages">
+        »
+      </button>
+
+      <!-- Next -->
+      <button
+        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        (click)="nextPage()" [disabled]="pageNumber === totalPages">
+        ›
+      </button>
+    </div>
+  </div>
+</div>
