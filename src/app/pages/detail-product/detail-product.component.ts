@@ -52,11 +52,13 @@ export class DetailProductComponent implements OnInit {
       salePrice: this.selectedOption.salePrice,
       variantId: this.selectedOption.variantId,
       stockQuantity: this.selectedOption.stockQuantity,
+
     }
     const itemToAdd = {
       ...selectVariant,
       quantity: this.quantity,
-      isActive: this.product?.isActive,
+      isActive: this.selectedOption?.isActive,
+
     };
     this.cartService.addToCart(itemToAdd);
   }
@@ -66,6 +68,7 @@ export class DetailProductComponent implements OnInit {
 
   buyNow() {
     if (!this.product) return;
+    console.log("🚀 This is! __ this.selectedOption:", this.selectedOption)
 
     const selectVariant: CartModel = {
       productId: this.product.productId,
@@ -76,6 +79,7 @@ export class DetailProductComponent implements OnInit {
       salePrice: this.selectedOption.salePrice,
       variantId: this.selectedOption.variantId,
       stockQuantity: this.selectedOption.stockQuantity,
+      isActive: this.selectedOption?.isActive || 1,
     }
 
     const itemToAdd = {
@@ -159,9 +163,6 @@ export class DetailProductComponent implements OnInit {
   }
   loadRecentlyViewed() {
     const items = this.recentlyViewedService.getAll();
-    console.log("🚀 This is! __ items:", items)
-    console.log("🚀 This is! __ this.slugCategoryName:", this.slugCategoryName)
-
     this.sanPhamDaXem = items.map((p: any) => ({
       id: p.productId,
       brand: p.brandName || '',
@@ -254,18 +255,19 @@ export class DetailProductComponent implements OnInit {
 
   youtubeUrl: any
   loadProduct(slug: string) {
-    console.log("🚀 This is! __ slug:", slug)
     this.loadingService.show(); // ✅ bật loading khi bắt đầu load
 
     this.productService.getBySlug(slug).subscribe({
       next: (res: any) => {
+        console.log("🚀 This is! __ res:", res)
         const galleryUrls: string[] = res?.galleryUrls || [];
         const allImages = res?.mainImageUrl
           ? [res.mainImageUrl, ...galleryUrls] // mainImageUrl ở đầu
           : galleryUrls;
         this.product = {
           ...res,
-          galleryUrls: allImages
+          galleryUrls: allImages,
+          isActive: 1,
         };
         this.recentlyViewedService.add({
           ...res,

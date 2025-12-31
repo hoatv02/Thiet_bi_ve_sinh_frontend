@@ -64,7 +64,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.isHovering = false;
     this.intervalId = setInterval(() => {
       this.next();
-    }, 3000); // chạy lại
+    }, 5000); // chạy lại
   }
 
 
@@ -169,7 +169,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.intervalId = setInterval(() => {
       this.next();
-    }, 3000);
+    }, 5000);
     this.getListBanner()
     this.getData();
     this.loadBrands();
@@ -212,17 +212,21 @@ export class HomePageComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   getData() {
     this.isLoading = true;
+
     this.typeService.getAll().subscribe(res => {
-      this.loaiSanPham = res.map((item: any) => ({
-        ...item,
-        slideIndexBrand: 0 // mỗi loại có chỉ số trượt riêng
-      }));
+      this.loaiSanPham = (res || [])
+        .filter((item: any) => item.specialProduct?.length > 0)
+        .map((item: any) => ({
+          ...item,
+          slideIndexBrand: 0
+        }));
+
       this.isLoading = false;
     });
   }
+
 
   ngOnDestroy(): void {
     clearInterval(this.intervalId);

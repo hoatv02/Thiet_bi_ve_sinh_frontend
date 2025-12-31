@@ -10,5 +10,5 @@ import { LoadingOverlayComponent } from './components/loading-overlay/loading-ov
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'NTN Asia';
+  title = 'NTN365 – Thiết bị vệ sinh & Điện nước cho mọi nhà';
 }

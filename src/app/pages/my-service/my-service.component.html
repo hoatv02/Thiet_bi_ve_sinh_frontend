@@ -11,34 +11,97 @@
         </p>
     </div>
 
-    <!-- Các ô dịch vụ -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-        <div class="rounded-[12px] bg-white shadow-[0_4px_20px_rgba(9,9,81,0.08)] p-6 flex flex-col gap-2">
-            <lucide-icon name="truck" class="w-8 h-8 text-[#3AA7E9]"></lucide-icon>
-            <h3 class="font-semibold text-gray-800 text-lg">Dịch vụ nhanh chóng</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
+            gap-6">
+
+        <!-- Card 1 -->
+        <div class="relative rounded-lg
+                shadow-[0_6px_24px_rgba(9,9,81,0.1)]
+                p-5 sm:pt-10
+                flex flex-col gap-2 text-center
+                transition-all duration-300
+                hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(9,9,81,0.15)]">
+
+            <div class="
+            flex justify-center
+            sm:absolute sm:-top-7 sm:left-1/2 sm:-translate-x-1/2
+            sm:p-2
+        ">
+                <lucide-icon name="truck" class="w-12 h-12 text-[#3AA7E9]"></lucide-icon>
+            </div>
+
+            <h3 class="font-semibold text-gray-800 text-lg">
+                Dịch vụ nhanh chóng
+            </h3>
             <p class="text-gray-500 text-sm leading-relaxed">
                 Đảm bảo tiến độ lắp đặt nhanh chóng đảm bảo tiến độ
             </p>
         </div>
 
-        <div class="rounded-[12px] bg-white shadow-[0_4px_20px_rgba(9,9,81,0.08)] p-6 flex flex-col gap-2">
-            <lucide-icon name="package" class="w-8 h-8 text-[#3AA7E9]"></lucide-icon>
-            <h3 class="font-semibold text-gray-800 text-lg">Linh kiện chính hãng</h3>
+        <!-- Card 2 -->
+        <div class="relative rounded-lg
+                shadow-[0_6px_24px_rgba(9,9,81,0.1)]
+                p-5 sm:pt-10
+                flex flex-col gap-2 text-center
+                transition-all duration-300
+                hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(9,9,81,0.15)]">
+
+            <div class="
+            flex justify-center
+            sm:absolute sm:-top-7 sm:left-1/2 sm:-translate-x-1/2
+            sm:p-2
+        ">
+                <lucide-icon name="package" class="w-12 h-12 text-[#3AA7E9]"></lucide-icon>
+            </div>
+
+            <h3 class="font-semibold text-gray-800 text-lg">
+                Linh kiện chính hãng
+            </h3>
             <p class="text-gray-500 text-sm leading-relaxed">
                 Đảm bảo linh kiện sử dụng chính hãng 100% từ nhà sản xuất
             </p>
         </div>
 
-        <div class="rounded-[12px] bg-white shadow-[0_4px_20px_rgba(9,9,81,0.08)] p-6 flex flex-col gap-2">
-            <lucide-icon name="wrench" class="w-8 h-8 text-[#3AA7E9]"></lucide-icon>
-            <h3 class="font-semibold text-gray-800 text-lg">Kỹ thuật chuyên nghiệp</h3>
+        <!-- Card 3 -->
+        <div class="relative rounded-lg
+                shadow-[0_6px_24px_rgba(9,9,81,0.1)]
+                p-5 sm:pt-10
+                flex flex-col gap-2 text-center
+                transition-all duration-300
+                hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(9,9,81,0.15)]">
+
+            <div class="
+            flex justify-center
+            sm:absolute sm:-top-7 sm:left-1/2 sm:-translate-x-1/2
+            sm:p-2
+        ">
+                <lucide-icon name="wrench" class="w-12 h-12 text-[#3AA7E9]"></lucide-icon>
+            </div>
+
+            <h3 class="font-semibold text-gray-800 text-lg">
+                Kỹ thuật chuyên nghiệp
+            </h3>
             <p class="text-gray-500 text-sm leading-relaxed">
                 Lắp đặt đúng tiêu chuẩn, chính xác và an toàn
             </p>
         </div>
 
-        <div class="rounded-[12px] bg-white shadow-[0_4px_20px_rgba(9,9,81,0.08)] p-6 flex flex-col gap-2">
-            <lucide-icon name="badge-dollar-sign" class="w-8 h-8 text-[#3AA7E9]"></lucide-icon>
+        <!-- Card 4 -->
+        <div class="relative rounded-lg
+                shadow-[0_6px_24px_rgba(9,9,81,0.1)]
+                p-5 sm:pt-10
+                flex flex-col gap-2 text-center
+                transition-all duration-300
+                hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(9,9,81,0.15)]">
+
+            <div class="
+            flex justify-center
+            sm:absolute sm:-top-7 sm:left-1/2 sm:-translate-x-1/2
+            sm:p-2
+        ">
+                <lucide-icon name="badge-dollar-sign" class="w-12 h-12 text-[#3AA7E9]"></lucide-icon>
+            </div>
+
             <h3 class="font-semibold text-gray-800 text-lg">
                 Chi phí hợp lý và minh bạch
             </h3>
@@ -46,7 +109,9 @@
                 Lắp đặt đúng tiêu chuẩn, báo giá rõ ràng, chính xác
             </p>
         </div>
+
     </div>
+
 
     <!-- Danh mục -->
     <div class="mt-8">
@@ -75,23 +140,23 @@
     <div class="overflow-x-auto rounded-lg shadow-md">
         <table class="w-full border border-gray-200 text-sm text-gray-800">
             <thead>
-                <tr class="bg-gradient-to-r from-[#00456F] to-[#3AA7E9]  text-white">
-                    <th class="py-3 px-4 text-left w-[80px]">STT</th>
-                    <th class="py-3 px-4 text-left">Hạng mục</th>
-                    <th class="py-3 px-4 text-center w-[120px]">Đơn giá (đ)</th>
+                <tr class="bg-gradient-to-r bg-[#00456F]  text-white divide-x divide-white/40">
+                    <th class="py-5 px-4 text-center w-[100px]">STT</th>
+                    <th class="py-5 px-4 text-center">Hạng mục</th>
+                    <th class="py-5 px-4 text-center w-[150px]">Đơn giá/Bộ(đ)</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr class="bg-gray-100 font-semibold text-[#3AA7E9]">
-                    <td colspan="3" class="py-2 px-4">{{ selectedCategory }}</td>
+                <tr class="bg-[#C7C8CA] text-center font-bold">
+                    <td colspan="3" class="py-3 px-4">{{ selectedCategory }}</td>
                 </tr>
 
                 @for (item of currentFeeTable; let i = $index; track i) {
-                <tr class="border-t hover:bg-blue-50 transition">
+                <tr class="border-t hover:bg-blue-50 transition divide-x divide-gray-200">
                     <td class="py-2 px-4 text-center">{{ i + 1 }}</td>
                     <td class="py-2 px-4">{{ item.name }}</td>
-                    <td class="py-2 px-4 text-center">{{ item.price}}</td>
+                    <td class="py-2 px-4 text-center">{{ item.price }}</td>
                 </tr>
                 }
             </tbody>

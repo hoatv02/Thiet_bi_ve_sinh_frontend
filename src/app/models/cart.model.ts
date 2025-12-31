@@ -7,4 +7,5 @@ export interface CartModel {
     price: number,
     salePrice: number,
     stockQuantity: number,
+    isActive?: boolean
 }

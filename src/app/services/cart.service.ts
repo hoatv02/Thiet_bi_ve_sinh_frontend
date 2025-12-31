@@ -15,8 +15,8 @@ export class CartService {
     cartCount$ = this.cartCount.asObservable();
 
     constructor(private notification: NzNotificationService) {
-        // Load lại dữ liệu từ localStorage
         const stored = localStorage.getItem('cart');
+        console.log("🚀 This is! __ stored:", stored)
         if (stored) {
             const parsed = JSON.parse(stored);
             const product = parsed.filter((item: any) => item.isActive === 1);
